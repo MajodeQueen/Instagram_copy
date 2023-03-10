@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
@@ -104,4 +108,19 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #fbfbfb inset;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.checkbox:checked {
+  border: none;
+}
+.checkbox:checked + .check-icon {
+  display: flex;
 }
