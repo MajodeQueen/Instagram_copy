@@ -1,5 +1,6 @@
+
 import axios from 'axios';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import React, { useEffect, useReducer } from 'react';
 
@@ -21,7 +22,7 @@ export default function FollowComp() {
   const [{ userInfo, error, followusers }, dispatch] = useReducer(reducer, {
     error: false,
   });
-  const userId = session?.user._id;
+  // const userId = session?.user._id;
 
   const fetchAll = async () => {
     try {
@@ -34,7 +35,7 @@ export default function FollowComp() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axios.get(`/api/userInfo/${userId}`);
+        const { data } = await axios.get('/api/userdata');
         dispatch({ type: 'SAVE_USERINFO', payload: data });
       } catch (err) {
         console.log(err);
@@ -43,8 +44,7 @@ export default function FollowComp() {
     };
     fetchUser();
     fetchAll();
-    console.log(session);
-  }, [session]);
+  }, []);
 
   return (
     <div className="">
@@ -95,3 +95,5 @@ export default function FollowComp() {
     </div>
   );
 }
+
+

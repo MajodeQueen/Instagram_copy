@@ -5,8 +5,6 @@ import Link from 'next/link';
 import React, { useEffect, useReducer } from 'react';
 import { TbSettings } from 'react-icons/tb';
 import ProfileTabz from './profiletabzComp';
-import ProtabComponent from './profiletabzComp';
-import ProfiletabComponent from './profiletabzComp';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -49,7 +47,7 @@ export default function ProfileComp({ children, tab, Tab, ptabz }) {
             <div className="flex flex-col">
               <div className="flex items-center space-x-6">
                 <p className="text-[20px]">{user?.username}</p>
-                <Link href="">
+                <Link href="/settings">
                   <button className="py-1 px-4 bg-gray-100 rounded-md hover:bg-gray-400">
                     Edit profile
                   </button>

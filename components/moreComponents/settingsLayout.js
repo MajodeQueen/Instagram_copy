@@ -12,7 +12,7 @@ import Search from '../verticalNavComps/tabzComponent/search';
 export default function SettingsLayout({ children , title }) {
   const [open, setOpen] = useState(true);
   const [notOpen, setNotOpen] = useState(false);
-  const [more, setMore] = useState(true);
+  const [more, setMore] = useState(false);
   const [create, setCreate] = useState(false);
   return (
     <>
@@ -82,8 +82,8 @@ export default function SettingsLayout({ children , title }) {
           {notOpen && open && <Notifications />}
         </div>
 
-        {!more && (
-          <div className="absolute left-4 w-[16%]  bottom-5 shadow rounded-md">
+        {more && (
+          <div className="fixed left-4 w-[16%]  bottom-5 shadow rounded-md">
             <More />
           </div>
         )}

@@ -1,6 +1,7 @@
 import Layout from '@/components/Layout';
 import PostComp from '@/components/postComp';
 import axios from 'axios';
+import { getSession } from 'next-auth/react';
 import React, { useEffect, useReducer } from 'react';
 
 const reducer = (state, action) => {
@@ -16,7 +17,7 @@ const reducer = (state, action) => {
   }
 };
 
-export default function Home() {
+export default function Home({session}) {
   const [{ loading, error, posts }, dispatch] = useReducer(reducer, {
     loading: true,
     error: false,
@@ -68,4 +69,20 @@ export default function Home() {
       )}
     </Layout>
   );
+}
+export async function getServerSideProps(context) {
+
+  const session = await getSession(context);
+  if(!session)
+    return{
+      redirect:{
+        destination: '/login',
+        permanent: false,
+      }
+  }
+  return{
+    props:{
+      session
+    }
+  }
 }

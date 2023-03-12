@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import React, { useState } from 'react';
-import SettingsLayout from './settingsLayout';
+import React, { useEffect, useState } from 'react';
 
 export default function EditProfile() {
   const [text, setText] = useState("");
+  
   const userData = {
     name: 'glamar_rose ',
     img: '/images/PngItem_1503945.png',
