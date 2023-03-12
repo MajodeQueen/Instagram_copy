@@ -21,7 +21,7 @@ export default function FollowComp() {
   const [{ userInfo, error, followusers }, dispatch] = useReducer(reducer, {
     error: false,
   });
-  const {userId} = session?.user._id;
+  const userId = session?.user._id;
 
   const fetchAll = async () => {
     try {
