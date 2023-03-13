@@ -5,6 +5,7 @@ import { BsSearch, BsHeart } from 'react-icons/bs';
 import { MdOutlineExplore } from 'react-icons/md';
 import { RiMessengerLine } from 'react-icons/ri';
 import { CgAddR, CgProfile, CgDetailsMore } from 'react-icons/cg';
+import { Avatar } from '@mui/material';
 
 const TabComponent = ({
   open,
@@ -15,6 +16,7 @@ const TabComponent = ({
   setMore,
   create,
   setCreate,
+  userInfo,
 }) => {
   const router = useRouter();
 
@@ -23,7 +25,9 @@ const TabComponent = ({
       <div className="w-full flex flex-col">
         <Link href="/">
           <div
-            className={`flex items-center  space-x-6 text-center py-3 px-4 mb-2  w-full rounded-full  text-xs hover:bg-blue-gray-50 ${router.asPath === '/'?'font-semibold':''} `}
+            className={`flex items-center  space-x-6 text-center py-3 px-4 mb-2  w-full rounded-full  text-xs hover:bg-blue-gray-50 ${
+              router.asPath === '/' ? 'font-semibold' : ''
+            } `}
           >
             <span className="text-2xl ">
               <GrHomeRounded />
@@ -59,7 +63,9 @@ const TabComponent = ({
         </div>
         <Link href="/tabs/explore">
           <div
-            className={`flex items-center  space-x-6 text-center py-3 px-4 mb-2  w-full rounded-full  text-xs hover:bg-blue-gray-50 ${router.asPath === '/tabs/explore'?'font-semibold':''}`}
+            className={`flex items-center  space-x-6 text-center py-3 px-4 mb-2  w-full rounded-full  text-xs hover:bg-blue-gray-50 ${
+              router.asPath === '/tabs/explore' ? 'font-semibold' : ''
+            }`}
           >
             <span className="text-2xl ">
               <MdOutlineExplore />
@@ -75,7 +81,9 @@ const TabComponent = ({
         </Link>
         <Link href="/tabs/reels">
           <div
-            className={`flex items-center  space-x-6 text-center py-3 px-4 mb-2  w-full rounded-full  text-xs hover:bg-blue-gray-50 ${router.asPath === '/tabs/reels'?'font-semibold':''}`}
+            className={`flex items-center  space-x-6 text-center py-3 px-4 mb-2  w-full rounded-full  text-xs hover:bg-blue-gray-50 ${
+              router.asPath === '/tabs/reels' ? 'font-semibold' : ''
+            }`}
           >
             <div className="">
               <img
@@ -95,7 +103,9 @@ const TabComponent = ({
         </Link>
         <Link href="/tabs/messages">
           <div
-            className={`flex items-center  space-x-6 text-center py-3 px-4 mb-2  w-full rounded-full  text-xs hover:bg-blue-gray-50 ${router.asPath === '/tabs/messages'?'font-semibold':''}`}
+            className={`flex items-center  space-x-6 text-center py-3 px-4 mb-2  w-full rounded-full  text-xs hover:bg-blue-gray-50 ${
+              router.asPath === '/tabs/messages' ? 'font-semibold' : ''
+            }`}
           >
             <span className="text-2xl ">
               <RiMessengerLine />
@@ -147,11 +157,15 @@ const TabComponent = ({
 
         <Link href="/tabs/profile">
           <div
-            className={`flex items-center  space-x-6 text-center py-3 px-4 mb-0 w-full rounded-full  text-xs hover:bg-blue-gray-50 ${router.asPath === '/tabs/profile'?'font-semibold':''}`}
+            className={`flex items-center  space-x-6 text-center py-3 px-4 mb-0 w-full rounded-full  text-xs hover:bg-blue-gray-50 ${
+              router.asPath === '/tabs/profile' ? 'font-semibold' : ''
+            }`}
           >
-            <span className="text-2xl ">
-              <CgProfile />
-            </span>
+            <Avatar
+              alt=""
+              src={userInfo?.image}
+              sx={{ width: 24, height: 24 }}
+            />
             <span
               className={`text-[16px] ${!open && 'hidden'} ${
                 notOpen && 'hidden'

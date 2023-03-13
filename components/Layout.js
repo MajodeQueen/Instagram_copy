@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import TabComponent from './verticalNavComps/tabzComponent';
 import Search from './verticalNavComps/tabzComponent/search';
 import { BsInstagram } from 'react-icons/bs';
@@ -9,12 +9,55 @@ import CreateWrapper from './createWrapper';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FollowComp from './followComp';
+import axios from 'axios';
+
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'FETCH_FOLLOW':
+      return { ...state, followusers: action.payload };
+    case 'SAVE_USERINFO':
+      return { ...state, userInfo: action.payload };
+    case 'FETCH_FAIL':
+      return { ...state, error: action.payload };
+    default:
+      return state;
+  }
+};
+
 
 export default function Layout({ children, title }) {
   const [open, setOpen] = useState(true);
   const [notOpen, setNotOpen] = useState(false);
   const [more, setMore] = useState(false);
   const [create, setCreate] = useState(false);
+
+  const [{ userInfo, error, followusers }, dispatch] = useReducer(reducer, {
+    error: false,
+  });
+
+  const fetchAll = async () => {
+    try {
+      const { data } = await axios.get('/api/users/allUsers');
+
+      dispatch({ type: 'FETCH_FOLLOW', payload: data });
+    } catch (err) {
+      dispatch({ type: 'FETCH_FAIL', payload: err });
+    }
+  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data } = await axios.get('/api/userdata');
+        dispatch({ type: 'SAVE_USERINFO', payload: data });
+      } catch (err) {
+        console.log(err);
+        dispatch({ type: 'FETCH_FAIL', payload: err });
+      }
+    };
+    fetchUser();
+    fetchAll();
+  }, []);
   
   return (
     <>
@@ -75,6 +118,7 @@ export default function Layout({ children, title }) {
               setMore={setMore}
               create={create}
               setCreate={setCreate}
+              userInfo={userInfo} 
             />
           </div>
         </div>
@@ -100,9 +144,9 @@ export default function Layout({ children, title }) {
         <div className="md:col-span-4">
           <main>
             <div className={`grid grid-cols-5 min-h-screen`}>
-              <div className={`col-span-5 md:col-span-3 mt-8`}>{children}</div>
+              <div className={`col-span-5 md:col-span-3 mt-8 px-6`}>{children}</div>
               <div className="col-span-2 hidden md:block mt-8 ">
-                <FollowComp/>
+                <FollowComp userInfo={userInfo} error={error} followusers={followusers}/>
               </div>
             </div>
           </main>

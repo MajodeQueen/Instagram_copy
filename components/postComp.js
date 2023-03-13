@@ -1,36 +1,45 @@
+import { Avatar } from '@mui/material';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 import React from 'react';
 import { BsChat, BsHeart } from 'react-icons/bs';
 import { GrEmoji } from 'react-icons/gr';
 import { MdOutlineMoreHoriz } from 'react-icons/md';
 import ReactPlayer from 'react-player';
+import Image from 'next/image';
 
 export default function PostComp({ post }) {
   return (
     <div>
-      <div key={post._id} className="w-[450px] min-h-[100px] mb-10">
+      <div key={post._id} className="w-[450px] mb-10">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3 mb-2">
-            <img
-              src={post?.postedImg}
-              alt=""
-              className="w-10 h-10 rounded-full"
-            />
+            <Avatar alt="" src={post?.postedImg} />
             <p>{post?.postedUsername}</p>
           </div>
           <MdOutlineMoreHoriz />
         </div>
         <div>
           {post?.imageUrl && post.imageUrl.endsWith('.mp4') ? (
-           <ReactPlayer
-           className="bg-white"
-           url={post?.imageUrl}
-           loop
-           playing ={true}
-           controls={true}
-           width="460px"
-         />
+            <ReactPlayer
+              className="bg-white"
+              url={post?.imageUrl}
+              loop
+              playing={true}
+              controls={true}
+              width="460px"
+            />
           ) : (
-            <img src={post.imageUrl} alt="" />
+            <Image
+              src={post?.imageUrl}
+              alt=""
+              width={450}
+              height={200}
+              Layout="intrinsic"
+              objectFit='cover'
+            />
           )}
         </div>
         <div className="flex items-center justify-between mt-4">
