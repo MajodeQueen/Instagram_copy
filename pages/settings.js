@@ -1,17 +1,17 @@
-import Ads from "@/components/moreComponents/Ads";
-import Apps from "@/components/moreComponents/Apps ";
-import ChangePwd from "@/components/moreComponents/ChangePwd ";
-import EditProfile from "@/components/moreComponents/EditProfile";
-import EmailNot from "@/components/moreComponents/EmailNot";
-import EmailsInsta from "@/components/moreComponents/EmailsInsta";
-import Help from "@/components/moreComponents/Help";
-import LoginAct from "@/components/moreComponents/LoginAct";
-import ManageConts from "@/components/moreComponents/ManageConts";
-import Privacy from "@/components/moreComponents/Privacy ";
-import PushNot from "@/components/moreComponents/PushNot";
-import SettingsComp from "@/components/moreComponents/settingsComp";
-import axios from "axios";
-import { useEffect, useReducer, useState } from "react";
+import Ads from '@/components/moreComponents/Ads';
+import Apps from '@/components/moreComponents/Apps ';
+import ChangePwd from '@/components/moreComponents/ChangePwd ';
+import EditProfile from '@/components/moreComponents/EditProfile';
+import EmailNot from '@/components/moreComponents/EmailNot';
+import EmailsInsta from '@/components/moreComponents/EmailsInsta';
+import Help from '@/components/moreComponents/Help';
+import LoginAct from '@/components/moreComponents/LoginAct';
+import ManageConts from '@/components/moreComponents/ManageConts';
+import Privacy from '@/components/moreComponents/Privacy ';
+import PushNot from '@/components/moreComponents/PushNot';
+import SettingsComp from '@/components/moreComponents/settingsComp';
+import axios from 'axios';
+import { useEffect, useReducer, useState } from 'react';
 
 const tabz = [
   {
@@ -72,10 +72,8 @@ const tabz = [
   },
 ];
 
-
-
 const reducer = (state, action) => {
-  switch (action.type) { 
+  switch (action.type) {
     case 'FETCH_USERINFO':
       return { ...state, userData: action.payload };
     case 'FETCH_FAIL':
@@ -105,27 +103,32 @@ export default function SettingsPage() {
     edit_profile: true,
   });
 
-  const [{ userData}, dispatch] = useReducer(reducer, {
+  const [{ userData }, dispatch] = useReducer(reducer, {
     error: false,
   });
 
+  const getUser = async () => {
+    try {
+      const { data } = await axios.get('/api/userdata');
+      dispatch({ type: 'FETCH_USERINFO', payload: data });
+    } catch (err) {
+      console.log(err);
+      dispatch({ type: 'FETCH_FAIL', payload: err });
+    }
+  };
 
-  useEffect(()=>{
-    const getUser = async () => {
-      try {
-        const { data } = await axios.get('/api/userdata');
-        dispatch({ type: 'FETCH_USERINFO', payload: data });
-      } catch (err) {
-        console.log(err);
-        dispatch({ type: 'FETCH_FAIL', payload: err });
-      }
-    };
-    getUser()
-  })
+  const [reinitializePage, setReinitializePage] = useState(true);
+
+  useEffect(() => {
+    if (reinitializePage === true) {
+      getUser();
+      setReinitializePage(false);
+    }
+  }, [reinitializePage]);
 
   const TabList = () => {
     if (tab?.edit_profile) {
-      return <EditProfile userData={userData}/>;
+      return <EditProfile userData={userData} getUser={getUser} />;
     } else if (tab?.change_password) {
       return <ChangePwd />;
     } else if (tab?.apps) {
@@ -152,13 +155,10 @@ export default function SettingsPage() {
   const Tab = (clickedTab) => {
     tabState({ ...defaultState, ...clickedTab });
   };
-  
 
-
-
-  return(
+  return (
     <SettingsComp tab={tab} Tab={Tab} tabz={tabz}>
-        <TabList/>
+      <TabList />
     </SettingsComp>
-  )
+  );
 }

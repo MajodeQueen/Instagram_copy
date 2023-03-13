@@ -13,7 +13,6 @@ async function handler(req, res) {
     });
     return;
   }
-
   await db.connect();
 
   const existingUser = await User.findOne({ email: email });

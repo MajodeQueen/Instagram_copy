@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
 import TabComponent from './editTabzComponent';
 import SettingsLayout from './settingsLayout';
 import { TbBrandMeta } from 'react-icons/tb';
