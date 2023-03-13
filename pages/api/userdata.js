@@ -6,9 +6,9 @@ const handler = async (req, res) => {
   const session = await getSession({ req });
   if (session) {
     const { user } = session;
-    db.connect();
+    await db.connect();
     const userdata = await User.findOne({ _id: user._id });
-    db.disconnect();
+    db.disconnect()
     res.send(userdata);
   }
 };

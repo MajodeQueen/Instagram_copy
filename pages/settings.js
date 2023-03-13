@@ -10,7 +10,8 @@ import ManageConts from "@/components/moreComponents/ManageConts";
 import Privacy from "@/components/moreComponents/Privacy ";
 import PushNot from "@/components/moreComponents/PushNot";
 import SettingsComp from "@/components/moreComponents/settingsComp";
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useReducer, useState } from "react";
 
 const tabz = [
   {
@@ -71,6 +72,19 @@ const tabz = [
   },
 ];
 
+
+
+const reducer = (state, action) => {
+  switch (action.type) { 
+    case 'FETCH_USERINFO':
+      return { ...state, userData: action.payload };
+    case 'FETCH_FAIL':
+      return { ...state, error: action.payload };
+    default:
+      return state;
+  }
+};
+
 export default function SettingsPage() {
   const defaultState = {
     edit_profile: false,
@@ -91,9 +105,27 @@ export default function SettingsPage() {
     edit_profile: true,
   });
 
+  const [{ userData}, dispatch] = useReducer(reducer, {
+    error: false,
+  });
+
+
+  useEffect(()=>{
+    const getUser = async () => {
+      try {
+        const { data } = await axios.get('/api/userdata');
+        dispatch({ type: 'FETCH_USERINFO', payload: data });
+      } catch (err) {
+        console.log(err);
+        dispatch({ type: 'FETCH_FAIL', payload: err });
+      }
+    };
+    getUser()
+  })
+
   const TabList = () => {
     if (tab?.edit_profile) {
-      return <EditProfile/>;
+      return <EditProfile userData={userData}/>;
     } else if (tab?.change_password) {
       return <ChangePwd />;
     } else if (tab?.apps) {
@@ -120,6 +152,10 @@ export default function SettingsPage() {
   const Tab = (clickedTab) => {
     tabState({ ...defaultState, ...clickedTab });
   };
+  
+
+
+
   return(
     <SettingsComp tab={tab} Tab={Tab} tabz={tabz}>
         <TabList/>

@@ -48,14 +48,13 @@ export default function FollowComp() {
 
   return (
     <div className="">
-      {userInfo ? (
         <div className=" mx-8">
           <div className="flex items-center justify-between ">
             <div className="flex items-center space-x-4">
-              <img src={userInfo.image} className="w-12 h-12 rounded-full" />
+              <img src={userInfo?.image} className="w-12 h-12 rounded-full" />
               <div>
-                <p className="text-[14px] font-semibold">{userInfo.username}</p>
-                <p className="text-[14px] text-gray-500">{userInfo.name}</p>
+                <p className="text-[14px] font-semibold">{userInfo?.username}</p>
+                <p className="text-[14px] text-gray-500">{userInfo?.name}</p>
               </div>
             </div>
             <Link href="#">
@@ -73,7 +72,7 @@ export default function FollowComp() {
               <div key={i} className="flex justify-between items-center pb-2">
                 <div className="flex items-center space-x-2">
                   <img
-                    src={user.image}
+                    src={user?.image}
                     alt=""
                     className="w-7 h-7 rounded-full"
                   />
@@ -89,9 +88,6 @@ export default function FollowComp() {
             ))}
           </div>
         </div>
-      ) : (
-        ''
-      )}
     </div>
   );
 }

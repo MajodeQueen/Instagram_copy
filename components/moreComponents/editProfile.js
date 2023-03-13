@@ -1,26 +1,26 @@
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
-export default function EditProfile() {
+export default function EditProfile({userData}) {
   const [text, setText] = useState("");
   
-  const userData = {
-    name: 'glamar_rose ',
-    img: '/images/PngItem_1503945.png',
-  };
+  // const userData = {
+  //   name: 'glamar_rose ',
+  //   img: '/images/PngItem_1503945.png',
+  // };
   return (
     <>
       <div className="pt-4 flex flex-col mx-20 ">
         <div className="flex items-center space-x-12">
           <img
-            src={userData?.img}
+            src={userData?.image}
             alt=""
             width={30}
             height={30}
             className="rounded-full "
           />
           <div className="">
-            <p className="font-semibold"> {userData?.name}</p>
+            <p className="font-semibold"> {userData?.username}</p>
             <label className="text-buttonBlue">
               <input type="file" />
               Change profile photo
@@ -30,7 +30,7 @@ export default function EditProfile() {
         <div className="flex space-x-9 pt-4">
           <p>Name</p>
           <div className="">
-            <input className="focus:outline-none px-2 h-6 w-[80%] border" />
+            <input type="text" className="focus:outline-none px-2 h-6 w-[80%] border" defaultValue={userData?.name}/>
             <p className="text-[12px] text-gray-400 pt-2 pb-4">
               Help people discover your account by using the name you're known
               by: either your full name, nickname, or business name.
@@ -43,7 +43,7 @@ export default function EditProfile() {
         <div className="flex space-x-2 pt-4">
           <p>Username</p>
           <div className="">
-            <input className="focus:outline-none px-2 h-6 w-[80%] border" />
+            <input type="text" className="focus:outline-none px-2 h-6 w-[80%] border"  defaultValue={userData?.username}/>
             <div className="flex text-[12px] text-gray-400 pt-4 ">
               <p>
                 <span>
@@ -90,7 +90,7 @@ export default function EditProfile() {
         </div>
         <div className="flex space-x-10 pt-4">
           <p>Email</p>
-            <input className="focus:outline-none  h-6 w-[70%] border px-2" />
+            <input type="text"  defaultValue={userData?.email} className="focus:outline-none  h-6 w-[70%] border px-2"/>
         </div>
         <div className="flex pt-6 -space-x-2">
           <p className="w-[20%]">Phone number </p>

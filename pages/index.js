@@ -58,8 +58,6 @@ export default function Home({session}) {
             <span className="sr-only">Loading...</span>
           </div>
         </div>
-      ) : error ? (
-        <div>error occured</div>
       ) : (
         <div className="flex flex-col items-center justify-center">
           {posts?.map((post,i) => (
@@ -72,7 +70,7 @@ export default function Home({session}) {
 }
 export async function getServerSideProps(context) {
 
-  const session = await getSession(context);
+  const session = await getSession(context)
   if(!session)
     return{
       redirect:{
@@ -80,6 +78,7 @@ export async function getServerSideProps(context) {
         permanent: false,
       }
   }
+
   return{
     props:{
       session
