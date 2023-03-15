@@ -84,6 +84,7 @@ export default function Layout({ children, title }) {
         pauseOnHover
       />
 
+
       <div
         className={`flex flex-col justify-between md:grid md:grid-cols-5 md:gap-16 min-h-screen md:flex-row bg-white relative `}
       >
@@ -137,8 +138,15 @@ export default function Layout({ children, title }) {
           </div>
         ):""}
 
-        <div className="absolute">
-          {create && <CreateWrapper create={create} setCreate={setCreate} />}
+        <div className="absolute z-50">
+          {create && 
+          (
+            <div>
+              <CreateWrapper create={create} setCreate={setCreate} />
+
+            </div>
+          )}
+          
         </div>
 
         <div className="md:col-span-4">

@@ -1,9 +1,10 @@
+import { Avatar } from '@mui/material';
 import axios from 'axios';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-export default function EditProfile({ userData}) {
+export default function EditProfile({ userData }) {
   const [imge, setImg] = useState();
   const [name, setName] = useState(userData?.name);
   const [username, setUsername] = useState(userData?.username);
@@ -16,34 +17,32 @@ export default function EditProfile({ userData}) {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-      const image = await profilepicUpload();
-      // console.log(image)
-      try {
-        const result = await axios.put('/api/users/updateUser', {
-          image,
-          name,
-          username,
-          websites,
-          bio,
-          email,
-          number,
-          gender,
-          sug,
-        });
+    const image = await profilepicUpload();
+    // console.log(image)
+    try {
+      const result = await axios.put('/api/users/updateUser', {
+        image,
+        name,
+        username,
+        websites,
+        bio,
+        email,
+        number,
+        gender,
+        sug,
+      });
 
-        if (result) {
-          toast.success('Update successful');
-        } else {
-          toast.error('!Something went wrong');
-        }
-      } catch (err) {
-        console.log(err);
+      if (result) {
+        toast.success('Update successful');
+      } else {
+        toast.error('!Something went wrong');
       }
+    } catch (err) {
+      console.log(err);
+    }
 
-      console.log(image)
+    console.log(image);
   };
-
-  
 
   const profilepicUpload = async () => {
     const formdata = new FormData();
@@ -52,7 +51,8 @@ export default function EditProfile({ userData}) {
       formdata.append('upload_preset', 'instaPics');
       formdata.append('cloud_name', 'naksdabitch');
       const res = await axios.post(
-        'https://api.cloudinary.com/v1_1/naksdabitch/image/upload',formdata
+        'https://api.cloudinary.com/v1_1/naksdabitch/image/upload',
+        formdata
       );
       return res.data.url;
     }
@@ -60,18 +60,12 @@ export default function EditProfile({ userData}) {
 
   return (
     <>
-      <form >
+      <form>
         <div className="pt-4 flex flex-col mx-20 ">
           <label>
             <input type="file" onChange={(e) => setImg(e.target.files[0])} />
             <div className="flex items-center space-x-12">
-              <img
-                src={userData?.image}
-                alt=""
-                width={30}
-                height={30}
-                className="rounded-full"
-              />
+              <Avatar alt="" src={userData?.image} />
               <div className="">
                 <p className="font-semibold"> {userData?.username}</p>
                 <p className="text-buttonBlue">Change profile photo</p>
@@ -206,7 +200,7 @@ export default function EditProfile({ userData}) {
             <p className="w-[20%]"></p>
             <div className="flex space-x-10  w-[80%]">
               <button
-              onClick={handleUpdate}
+                onClick={handleUpdate}
                 type="submit"
                 className="bg-blue-500 px-3 rounded-md text-white"
               >

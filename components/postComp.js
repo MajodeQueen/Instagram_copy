@@ -37,8 +37,6 @@ export default function PostComp({ post }) {
               alt=""
               width={450}
               height={200}
-              Layout="intrinsic"
-              objectFit='cover'
             />
           )}
         </div>

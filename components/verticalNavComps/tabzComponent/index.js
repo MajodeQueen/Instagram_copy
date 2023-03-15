@@ -141,7 +141,7 @@ const TabComponent = ({
 
         <div
           className={`flex items-center  space-x-6 text-center py-3 px-4 mb-2  w-full rounded-full  text-xs hover:bg-blue-gray-50 active:font-semibold`}
-          onClick={() => setCreate(!create)}
+          onClick={() => setCreate(true)}
         >
           <span className="text-2xl ">
             <CgAddR />

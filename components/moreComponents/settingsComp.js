@@ -3,10 +3,10 @@ import React, { useEffect } from 'react';
 import TabComponent from './editTabzComponent';
 import SettingsLayout from './settingsLayout';
 import { TbBrandMeta } from 'react-icons/tb';
-export default function SettingsComp({ children, tab, Tab, tabz }) {
+export default function SettingsComp({ children, tab, Tab, tabz ,userData }) {
   return (
     <>
-      <SettingsLayout title="Edit profile.Instagram clone">
+      <SettingsLayout userData={userData} title="Edit profile.Instagram clone">
         <div className="grid grid-cols-3 border mt-4 mx-4 mb-6">
           <div className="col-span-1 border-r">
             <TabComponent tab={tab} Tab={Tab} tabz={tabz} />

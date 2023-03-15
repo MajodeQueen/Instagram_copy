@@ -22,6 +22,7 @@ export default function FollowComp({userInfo, error, followusers}) {
                 src={userInfo?.image}
                 sx={{ width: 56, height: 56 }}
               />
+              
             </div>
 
             <div>

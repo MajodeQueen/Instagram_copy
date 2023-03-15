@@ -1,11 +1,10 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import User from '@/models/User';
 import bcrypt from 'bcryptjs';
 import db from '@/utils/db';
-import clientPromise from '@/lib/mongodb';
+
 
 export default NextAuth({
   session: {
@@ -46,6 +45,5 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
-  adapter: MongoDBAdapter(clientPromise),
-  secret: process.env.SECRET,
+  
 });

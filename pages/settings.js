@@ -128,7 +128,7 @@ export default function SettingsPage() {
 
   const TabList = () => {
     if (tab?.edit_profile) {
-      return <EditProfile userData={userData} getUser={getUser} />;
+      return <EditProfile userData={userData}  />;
     } else if (tab?.change_password) {
       return <ChangePwd />;
     } else if (tab?.apps) {
@@ -157,7 +157,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <SettingsComp tab={tab} Tab={Tab} tabz={tabz}>
+    <SettingsComp tab={tab} Tab={Tab} tabz={tabz} userData={userData}>
       <TabList />
     </SettingsComp>
   );

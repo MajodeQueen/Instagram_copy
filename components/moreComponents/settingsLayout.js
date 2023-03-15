@@ -9,7 +9,7 @@ import More from '../verticalNavComps/tabzComponent/more';
 import Notifications from '../verticalNavComps/tabzComponent/notifications';
 import Search from '../verticalNavComps/tabzComponent/search';
 
-export default function SettingsLayout({ children , title }) {
+export default function SettingsLayout({ children , title ,userData}) {
   const [open, setOpen] = useState(true);
   const [notOpen, setNotOpen] = useState(false);
   const [more, setMore] = useState(false);
@@ -69,6 +69,7 @@ export default function SettingsLayout({ children , title }) {
               setMore={setMore}
               create={create}
               setCreate={setCreate}
+              userData={userData}
             />
           </div>
         </div>
@@ -88,10 +89,10 @@ export default function SettingsLayout({ children , title }) {
           </div>
         )}
 
-        <div className="absolute">
+        <div className="absolute z-50">
           {create && <CreateWrapper create={create} setCreate={setCreate} />}
         </div>
-        <div className="col-span-4">{children}</div>
+        <div className="col-span-4 min-h-screen">{children}</div>
       </div>
     </>
   );
