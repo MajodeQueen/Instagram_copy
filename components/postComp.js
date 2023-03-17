@@ -13,15 +13,15 @@ import { FcLike } from 'react-icons/fc';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 
-
-export default function PostComp({ post , fetchData}) {
+export default function PostComp({ post, fetchData }) {
   const { data: session } = useSession();
-  const alreayliked = post.likes.find((x)=>x === session.user._id);
   const [isLiked, setisLiked] = useState(false);
+  const [comment, setComment] = useState('');
   const postId = post._id;
+  const alreayliked = post.likes.find((x) => x === session.user._id);
 
   const addLike = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const result = await axios.put('/api/posts/likes', {
         postId,
@@ -35,8 +35,8 @@ export default function PostComp({ post , fetchData}) {
     }
   };
 
-  const  removeLike = async(e)=>{
-    e.preventDefault()
+  const removeLike = async (e) => {
+    e.preventDefault();
     try {
       const result = await axios.put('/api/posts/unlikes', {
         postId,
@@ -48,8 +48,19 @@ export default function PostComp({ post , fetchData}) {
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
+  const addComment = async (e) => {
+    e.preventDefault();
+    const result = await axios.post('/api/posts/comments', {
+      postId,
+      comment,
+    });
+    if (result) {
+      setComment('');
+      fetchData();
+    }
+  };
   return (
     <div>
       <div key={post._id} className="w-[450px] mb-10">
@@ -76,7 +87,7 @@ export default function PostComp({ post , fetchData}) {
         </div>
         <div className="flex items-center justify-between mt-4">
           <div className="flex items-center space-x-4">
-            <div onClick={ alreayliked? removeLike:addLike }>
+            <div onClick={alreayliked ? removeLike : addLike}>
               {isLiked || alreayliked ? (
                 <FcLike className="text-3xl" />
               ) : (
@@ -84,7 +95,7 @@ export default function PostComp({ post , fetchData}) {
               )}
             </div>
             <div>
-              <BsChat className="text-2xl "/>
+              <BsChat className="text-2xl " />
             </div>
             <img
               src="/images/pngkit_send-icon-png_1882778.png"
@@ -104,10 +115,21 @@ export default function PostComp({ post , fetchData}) {
         </div>
         <div className="flex items-center border-b border-black ">
           <input
+            onChange={(e) => setComment(e.target.value)}
             className="w-full mt-2 py-3 px-2  focus:outline-none "
             placeholder="Add a comment..."
           />
-          <GrEmoji className="" />
+          <div className="flex items-center space-x-1">
+            {comment.length > 0 && (
+              <button
+                onClick={addComment}
+                className="text-blue-400 text-[12px]"
+              >
+                Post
+              </button>
+            )}
+            <GrEmoji className="" />
+          </div>
         </div>
       </div>
     </div>

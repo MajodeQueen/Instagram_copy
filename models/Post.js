@@ -1,22 +1,17 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const postSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    desc:{ type: String},
-    location: { type: String},
-    details:{type:String},
-    hide: { type: Boolean , default:false},
-    imageUrl:{type:String },
-    offcomts:{type:Boolean , default:false},
-    postedUsername:{type:String },
-    postedImg:{type:String },
-    likes:[{ type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-    comments:[{
-      text:String,
-      createdAt:{type:Date ,default:Date.now},
-      commentBy:{ type: mongoose.Schema.Types.ObjectId, ref: 'User'}
-    }]
+    desc: { type: String },
+    location: { type: String },
+    details: { type: String },
+    hide: { type: Boolean, default: false },
+    imageUrl: { type: String },
+    offcomts: { type: Boolean, default: false },
+    postedUsername: { type: String },
+    postedImg: { type: String },
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   },
   {
     timestamps: true,
