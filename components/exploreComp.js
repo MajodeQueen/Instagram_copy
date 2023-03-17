@@ -38,11 +38,13 @@ export default function ExploreComp({ post }) {
             </Link>
           </div>
           <div className="absolute left-0 right-0 w-full h-full flex justify-center items-center space-x-2">
-            <div>
+            <div className='flex items-center space-x-2'>
               <FaHeart className="text-white w-6 h-6 rounded-xl" />
+              <p className="text-white ">{post.likes.length}</p>
             </div>
-            <div>
-              <FaComment className="text-white w-6 h-6 rounded-xl" />
+            <div className='flex items-center space-x-2'>
+              <FaComment className="text-white w-6 h-6 rounded-xl " />
+              <p className="text-white ">{post.comments.length}</p>
             </div>
           </div>
         </div>

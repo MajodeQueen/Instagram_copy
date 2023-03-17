@@ -22,16 +22,17 @@ export default function Home({session}) {
     loading: true,
     error: false,
   });
+
+  const fetchData = async () => {
+    dispatch({ type: 'FETCH_REQUEST' });
+    try {
+      const data = await axios.get('/api/posts/getPosts');
+      dispatch({ type: 'FETCH_SUCCESS', payload: data.data });
+    } catch (err) {
+      dispatch({ type: 'FETCH_FAIL', payload: err });
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      dispatch({ type: 'FETCH_REQUEST' });
-      try {
-        const data = await axios.get('/api/posts/getPosts');
-        dispatch({ type: 'FETCH_SUCCESS', payload: data.data });
-      } catch (err) {
-        dispatch({ type: 'FETCH_FAIL', payload: err });
-      }
-    };
     fetchData();
   }, []);
   return (
@@ -61,7 +62,7 @@ export default function Home({session}) {
       ) : (
         <div className="flex flex-col items-center justify-center">
           {posts?.map((post,i) => (
-            <PostComp key={i} post={post} />
+            <PostComp key={i} post={post} fetchData={fetchData} />
           ))}
         </div>
       )}

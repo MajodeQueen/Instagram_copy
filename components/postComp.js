@@ -3,14 +3,53 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import React from 'react';
+import React, { useState } from 'react';
 import { BsChat, BsHeart } from 'react-icons/bs';
 import { GrEmoji } from 'react-icons/gr';
 import { MdOutlineMoreHoriz } from 'react-icons/md';
 import ReactPlayer from 'react-player';
 import Image from 'next/image';
+import { FcLike } from 'react-icons/fc';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
-export default function PostComp({ post }) {
+
+export default function PostComp({ post , fetchData}) {
+  const { data: session } = useSession();
+  const alreayliked = post.likes.find((x)=>x === session.user._id);
+  const [isLiked, setisLiked] = useState(false);
+  const postId = post._id;
+
+  const addLike = async (e) => {
+    e.preventDefault()
+    try {
+      const result = await axios.put('/api/posts/likes', {
+        postId,
+      });
+      if (result) {
+        setisLiked(true);
+        fetchData();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const  removeLike = async(e)=>{
+    e.preventDefault()
+    try {
+      const result = await axios.put('/api/posts/unlikes', {
+        postId,
+      });
+      if (result) {
+        setisLiked(false);
+        fetchData();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <div>
       <div key={post._id} className="w-[450px] mb-10">
@@ -32,18 +71,21 @@ export default function PostComp({ post }) {
               width="460px"
             />
           ) : (
-            <Image
-              src={post?.imageUrl}
-              alt=""
-              width={450}
-              height={200}
-            />
+            <Image src={post?.imageUrl} alt="" width={450} height={200} />
           )}
         </div>
         <div className="flex items-center justify-between mt-4">
           <div className="flex items-center space-x-4">
-            <BsHeart className="text-2xl" />
-            <BsChat className="text-2xl " />
+            <div onClick={ alreayliked? removeLike:addLike }>
+              {isLiked || alreayliked ? (
+                <FcLike className="text-3xl" />
+              ) : (
+                <BsHeart className="text-2xl" />
+              )}
+            </div>
+            <div>
+              <BsChat className="text-2xl "/>
+            </div>
             <img
               src="/images/pngkit_send-icon-png_1882778.png"
               alt=""
@@ -52,7 +94,7 @@ export default function PostComp({ post }) {
           </div>
           <img src="/images/kindpng_1791489.png" alt="" className="w-6 h-6" />
         </div>
-        <div className="mt-2">38,634 likes</div>
+        <div className="mt-2">{post.likes.length} likes</div>
         <div className="flex items-center space-x-2">
           <p className="font-semibold">{post?.postedUsername}</p>
           <p>{post?.desc}</p>
