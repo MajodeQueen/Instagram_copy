@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import TabComponent from './verticalNavComps/tabzComponent';
 import Search from './verticalNavComps/tabzComponent/search';
 import { BsInstagram } from 'react-icons/bs';
@@ -10,6 +10,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FollowComp from './followComp';
 import axios from 'axios';
+import PostDetails from './postDetails';
+import { Store } from '@/utils/Store';
 
 
 const reducer = (state, action) => {
@@ -31,10 +33,13 @@ export default function Layout({ children, title }) {
   const [notOpen, setNotOpen] = useState(false);
   const [more, setMore] = useState(false);
   const [create, setCreate] = useState(false);
-
+  const [postAbout, setPostAbout] = useState(false);
   const [{ userInfo, error, followusers }, dispatch] = useReducer(reducer, {
     error: false,
   });
+
+  const {state:cxtState} = useContext(Store);
+  const {openPostDetails} = cxtState;
 
   const fetchAll = async () => {
     try {
@@ -143,10 +148,18 @@ export default function Layout({ children, title }) {
           (
             <div>
               <CreateWrapper create={create} setCreate={setCreate} />
-
             </div>
           )}
-          
+        </div>
+
+
+        <div className="absolute z-50">
+          {openPostDetails && 
+          (
+            <div>
+              <PostDetails/>
+            </div>
+          )}
         </div>
 
         <div className="md:col-span-4">

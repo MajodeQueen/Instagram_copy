@@ -44,7 +44,7 @@ export default function ExploreComp({ post }) {
             </div>
             <div className='flex items-center space-x-2'>
               <FaComment className="text-white w-6 h-6 rounded-xl " />
-              <p className="text-white ">{post.comments.length}</p>
+              <p className="text-white ">{post.comments?.length}</p>
             </div>
           </div>
         </div>

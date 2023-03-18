@@ -3,7 +3,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BsChat, BsHeart } from 'react-icons/bs';
 import { GrEmoji } from 'react-icons/gr';
 import { MdOutlineMoreHoriz } from 'react-icons/md';
@@ -12,6 +12,7 @@ import Image from 'next/image';
 import { FcLike } from 'react-icons/fc';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
+import { Store } from '@/utils/Store';
 
 export default function PostComp({ post, fetchData }) {
   const { data: session } = useSession();
@@ -19,7 +20,7 @@ export default function PostComp({ post, fetchData }) {
   const [comment, setComment] = useState('');
   const postId = post._id;
   const alreayliked = post.likes.find((x) => x === session.user._id);
-
+  const {dispatch:cxtDispatch} = useContext(Store);
   const addLike = async (e) => {
     e.preventDefault();
     try {
@@ -34,7 +35,6 @@ export default function PostComp({ post, fetchData }) {
       console.log(err);
     }
   };
-
   const removeLike = async (e) => {
     e.preventDefault();
     try {
@@ -61,6 +61,12 @@ export default function PostComp({ post, fetchData }) {
       fetchData();
     }
   };
+
+  const openAboutPost = async () => {
+    cxtDispatch({ type: 'OPEN_POST_DETAILS' ,payload:post})
+  }
+
+  
   return (
     <div>
       <div key={post._id} className="w-[450px] mb-10">
@@ -82,7 +88,7 @@ export default function PostComp({ post, fetchData }) {
               width="460px"
             />
           ) : (
-            <Image src={post?.imageUrl} alt="" width={450} height={200} />
+            <Image src={post?.imageUrl} alt="" width={450} height={200}/>
           )}
         </div>
         <div className="flex items-center justify-between mt-4">
@@ -110,7 +116,7 @@ export default function PostComp({ post, fetchData }) {
           <p className="font-semibold">{post?.postedUsername}</p>
           <p>{post?.desc}</p>
         </div>
-        <div>
+        <div className='cursor-pointer' onClick={openAboutPost}>
           <p className="mt-2 text-gray-400">View all 66 comments</p>
         </div>
         <div className="flex items-center border-b border-black ">
