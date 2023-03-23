@@ -131,7 +131,7 @@ export default function PostComp({ post, fetchData }) {
           <p>{post?.desc}</p>
         </div>
         <div className="cursor-pointer" onClick={openAboutPost}>
-          <p className="mt-2 text-gray-400">View all 66 comments</p>
+          <p className="mt-2 text-gray-400">View all {post.comments?.length} comments</p>
         </div>
         <div className="flex items-center border-b border-black ">
           <input

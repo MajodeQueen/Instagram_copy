@@ -1,6 +1,7 @@
 import { Store } from '@/utils/Store';
 import { Avatar } from '@mui/material';
 import axios from 'axios';
+import moment from 'moment/moment';
 import Image from 'next/image';
 import React, { useContext } from 'react';
 import { BsChat, BsHeart, BsThreeDots, BsEmojiSmile } from 'react-icons/bs';
@@ -14,6 +15,12 @@ export default function PostDetails() {
     cxtDispatch({ type: 'CLOSE_POST_DETAILS' });
     console.log('clicked close');
   };
+
+  const formatter = (time) => {
+    return moment.utc(time).local().startOf('seconds').fromNow();
+  };
+
+  const dateString = '2019-10-30T14:01:59.689Z';
 
   return (
     <>
@@ -79,11 +86,23 @@ export default function PostDetails() {
                       <main className="invisible-scrollbar h-56 overflow-auto px-2">
                         <div className="w-full">
                           {post.comments.map((comment) => (
-                            <div key={comment._id} className='flex space-x-2 mt-2'>
+                            <div key={comment._id} className="flex items-center space-x-4 justify-between">
                               <Avatar alt="" src={comment.commentBy.image} />
-                              <p className='text-[14px] w-[90%]'><span className='font-semibold'>{comment.commentBy.username}</span>{comment.text}</p>
+                              <div className='w-[90%]'>
+                                <div className="flex space-x-2 mt-2">
+                                  <p className="text-[14px] w-[90%]">
+                                    <span className="font-semibold">
+                                      {comment.commentBy.username}
+                                    </span>
+                                    {comment.text}
+                                  </p>
+                                  
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <p>{formatter(comment.date)}</p>
+                                </div>
+                              </div>
                               <BsHeart className="" />
-                              
                             </div>
                           ))}
                         </div>
