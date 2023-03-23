@@ -63,6 +63,9 @@ export default function Layout({ children, title }) {
     fetchUser();
     fetchAll();
   }, []);
+
+
+  
   
   return (
     <>
@@ -165,7 +168,7 @@ export default function Layout({ children, title }) {
         <div className="md:col-span-4">
           <main>
             <div className={`grid grid-cols-5 min-h-screen`}>
-              <div className={`${openPostDetails?'overflow-hidden':''}col-span-5 md:col-span-3 mt-8 px-6`}>
+              <div className={`${openPostDetails?'fixed overflow-hidden':''}col-span-5 md:col-span-3 mt-8 px-6`}>
                 {children}
               </div>
               <div className="col-span-2 hidden md:block mt-8 ">
