@@ -3,7 +3,8 @@ import db from '@/utils/db';
 
 async function handler(req, res) {
   await db.connect();
-  const posts = await Post.find().sort({"createdAt":-1})
+  const posts = await Post.find().populate('comments.commentBy','_id username image').
+  sort({"createdAt":-1})
   db.disconnect()
   res.send(posts);
 }

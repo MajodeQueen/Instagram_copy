@@ -12,6 +12,20 @@ const postSchema = new mongoose.Schema(
     postedUsername: { type: String },
     postedImg: { type: String },
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    comments: [
+      {
+        text: { type: String },
+        commentBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        date: { type: Date, default: Date.now() },
+        likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        replies: [
+          {
+            text: { type: String },
+            repliedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+          },
+        ],
+      },
+    ],
   },
   {
     timestamps: true,

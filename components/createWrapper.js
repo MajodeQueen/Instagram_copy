@@ -5,6 +5,7 @@ import { BiArrowBack } from 'react-icons/bi';
 import ReactPlayer from 'react-player';
 import { toast } from 'react-toastify';
 import PostForm from './verticalNavComps/createForm';
+import Image from 'next/image';
 
 export default function CreateWrapper({ create, setCreate }) {
   const [isPickerVisible, setPickerVisible] = useState(false);
@@ -96,8 +97,8 @@ export default function CreateWrapper({ create, setCreate }) {
               </button>
             </div>
 
-            <div className="absolute flex justify-center items-center right-0 left-0 w-screen h-screen">
-              <div className="bg-white">
+            <div className="absolute flex justify-center items-center right-0 left-0 w-screen h-screen mb-8">
+              <div className="bg-white mx-20">
                 {imagePreview || videoPreview ? (
                   <div className="">
                     <div className="flex items-center justify-between px-2 w-full border-b py-2 sticky  z-10 top-0 bg-white">
@@ -114,7 +115,7 @@ export default function CreateWrapper({ create, setCreate }) {
                         </div>
                       ) : (
                         <div className="flex items-center justify-between px-2 w-full">
-                          <BiArrowBack />
+                          <BiArrowBack  />
                           <p>Crop</p>
                           <div
                             onClick={() => setNext(!next)}
@@ -134,12 +135,15 @@ export default function CreateWrapper({ create, setCreate }) {
                         <div className="sticky top-10">
                           {imagePreview != null && (
                             <Image
-                              priority
-                              src={imagePreview}
-                              alt=""
-                              width="300"
-                              className="justify-center items-center px-2 "
-                            />
+                            src={imagePreview}
+                            width={200}
+                            height={300}
+                            alt=""
+                            sizes="(max-width: 768px) 100vw,
+                                (max-width: 1200px) 50vw,
+                                     33vw"
+                            className={` ${next?'w-[600px] h-[450px]':'w-[350px] h-[450px]'} object-cover`}
+                          />
                           )}
                           {videoPreview != null && (
                             <ReactPlayer

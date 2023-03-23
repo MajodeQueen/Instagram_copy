@@ -17,14 +17,8 @@ export default function FollowComp({userInfo, error, followusers}) {
         <div className="flex items-center justify-between ">
           <div className="flex items-center space-x-4">
             <div className="">
-              <Avatar
-                alt=""
-                src={userInfo?.image}
-                sx={{ width: 56, height: 56 }}
-              />
-              
+               <Avatar alt=""  src={userInfo?.image} />
             </div>
-
             <div>
               <p className="text-[14px] font-semibold">{userInfo?.username}</p>
               <p className="text-[14px] text-gray-500">{userInfo?.name}</p>

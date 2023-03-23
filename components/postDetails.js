@@ -1,18 +1,20 @@
 import { Store } from '@/utils/Store';
 import { Avatar } from '@mui/material';
+import axios from 'axios';
 import Image from 'next/image';
 import React, { useContext } from 'react';
-import { AiOutlineClose } from 'react-icons/ai';
-import { BsThreeDots } from 'react-icons/bs';
+import { BsChat, BsHeart, BsThreeDots, BsEmojiSmile } from 'react-icons/bs';
 
 export default function PostDetails() {
   const { state: cxtState, dispatch: cxtDispatch } = useContext(Store);
   const { post } = cxtState;
+  const postId = post._id;
 
   const closePostAbout = () => {
     cxtDispatch({ type: 'CLOSE_POST_DETAILS' });
     console.log('clicked close');
   };
+
   return (
     <>
       <div className="fixed inset-0 bg-opaqueBlack bg-opacity-75 transition-opacity"></div>
@@ -60,16 +62,61 @@ export default function PostDetails() {
                         />
                       </div>
                     </div>
-                    <div className="w-[50%]">
-                      <div className="flex justify-between border-b py-2">
-                        <div className=" flex items-center space-x-2 px-2">
-                          <Avatar alt="" src={post?.postedImg} />
-                          <p className='font-semibold'>{post.postedUsername}</p>
+                    <div className=" flex flex-col w-[50%] justify-between ">
+                      <header>
+                        <div className="flex justify-between border-b py-2 sticky z-10">
+                          <div className=" flex items-center space-x-2 px-2">
+                            <Avatar alt="" src={post?.postedImg} />
+                            <p className="font-semibold">
+                              {post.postedUsername}
+                            </p>
+                          </div>
+                          <div className="px-2">
+                            <BsThreeDots />
+                          </div>
                         </div>
-                        <div className='px-2'>
-                          <BsThreeDots />
+                      </header>
+                      <main className="invisible-scrollbar h-56 overflow-auto px-2">
+                        <div className="w-full">
+                          {post.comments.map((comment) => (
+                            <div key={comment._id} className='flex space-x-2 mt-2'>
+                              <Avatar alt="" src={comment.commentBy.image} />
+                              <p className='text-[14px] w-[90%]'><span className='font-semibold'>{comment.commentBy.username}</span>{comment.text}</p>
+                              <BsHeart className="" />
+                              
+                            </div>
+                          ))}
                         </div>
-                      </div>
+                      </main>
+                      <footer className="flex flex-col justify-between  border-t h-36 shadow-inner sticky z-10 pb-2">
+                        <div className="flex items-center justify-between mt-4 px-2">
+                          <div className="flex items-center space-x-4">
+                            <div>
+                              <BsHeart className="text-2xl" />
+                            </div>
+                            <div>
+                              <BsChat className="text-2xl " />
+                            </div>
+                            <img
+                              src="/images/pngkit_send-icon-png_1882778.png"
+                              alt=""
+                              className="w-6 h-6"
+                            />
+                          </div>
+                          <img
+                            src="/images/kindpng_1791489.png"
+                            alt=""
+                            className="w-6 h-6"
+                          />
+                        </div>
+                        <div className="px-2">{post.likes.length} likes</div>
+
+                        <div className="flex items-center space-x-2 border-t py-2 px-2">
+                          <BsEmojiSmile className="text-2xl " />
+                          <input className="w-[80%] focus:outline-none " />
+                          <button className="text-blue-400 ">Post</button>
+                        </div>
+                      </footer>
                     </div>
                   </div>
                 </div>
