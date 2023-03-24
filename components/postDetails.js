@@ -1,10 +1,9 @@
 import { Store } from '@/utils/Store';
 import { Avatar } from '@mui/material';
 import Image from 'next/image';
-import React, { useContext} from 'react';
+import React, { useContext } from 'react';
 import Comment from './commentComp';
 import { BsChat, BsHeart, BsThreeDots, BsEmojiSmile } from 'react-icons/bs';
-
 
 export default function PostDetails() {
   const { state: cxtState, dispatch: cxtDispatch } = useContext(Store);
@@ -15,7 +14,6 @@ export default function PostDetails() {
     cxtDispatch({ type: 'CLOSE_POST_DETAILS' });
     console.log('clicked close');
   };
-
 
   return (
     <>
@@ -79,13 +77,23 @@ export default function PostDetails() {
                         </div>
                       </header>
                       <main className="invisible-scrollbar h-56 overflow-auto px-2">
+                        <div className='flex'>
+                          <div className='flex space-x-2'>
+                            <Avatar alt="" src={post?.postedImg} />
+                            <p className="font-semibold  text-[14px]">
+                              {post.postedUsername}<span className='font-normal text-[14px]'>{" "}{post?.desc}</span>
+                            </p>
+                          </div>
+                          
+                        </div>
+
                         <div className="w-full">
                           {post.comments.map((comment) => (
                             <div
                               key={comment._id}
                               className="flex items-center space-x-4 justify-between"
                             >
-                              <Comment comment={comment} postId={postId}/>
+                              <Comment comment={comment} postId={postId} />
                             </div>
                           ))}
                         </div>

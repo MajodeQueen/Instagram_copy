@@ -82,19 +82,19 @@ function Comment({ comment, postId }) {
   };
 
   return (
-    <div className="flex w-full items-center ">
+    <div className="flex w-full items-center space-x-2 ">
       <Avatar alt="" src={comment.commentBy.image} />
       <div className="w-[90%]">
         <div className="flex space-x-2 mt-2">
           <p className="text-[14px] w-[90%]">
             <span className="font-semibold">{comment.commentBy.username}</span>
-            {comment.text}
+            {" "}{comment.text}
           </p>
         </div>
         <div className="flex items-center space-x-2">
           <p className="text-[12px] text-gray-500">{formatter(comment.date)}</p>
           <p className="text-[12px] text-gray-500">
-            {comment.likes?.length}
+            {comment.likes?.length}{" "}
             {comment.likes.length < 2 ? <span>like</span> : <span>likes</span>}
           </p>
           <button className="text-[12px] text-gray-500">Reply</button>
