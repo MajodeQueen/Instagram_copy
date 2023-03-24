@@ -5,7 +5,7 @@ import { FcLike } from 'react-icons/fc';
 import axios from 'axios';
 import moment from 'moment';
 import { toast } from 'react-toastify';
-import { useSession } from 'next-auth/react';;
+import { useSession } from 'next-auth/react';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -13,6 +13,9 @@ const reducer = (state, action) => {
       return { ...state, loading: true, error: false };
     case 'LIKE_SENT':
       return { ...state, loading: false, like: action.payload };
+    case 'UNLIKE_SENT':
+      return { ...state, loading: false, unlike: action.payload, like: null };
+
     case 'LIKE_FAIL':
       return { ...state, loading: false, error: true };
     default:
@@ -20,14 +23,17 @@ const reducer = (state, action) => {
   }
 };
 
-function Comment({ comment ,postId }) {
-  const { data: session } =  useSession();
-  const [{ loading, like, error }, dispatch] = useReducer(reducer, {
+function Comment({ comment, postId }) {
+  const { data: session } = useSession();
+  const [{ loading, like, error, unlike }, dispatch] = useReducer(reducer, {
     loading: false,
     error: false,
+    like:false,
   });
 
-  const alreaylikedComment = comment.likes.find((x)=>x._id === session.user._id )
+  const alreaylikedComment = comment.likes.find(
+    (x) => x._id === session.user._id
+  );
 
   const formatter = (time) => {
     return moment(new Date(time)).fromNow();
@@ -38,11 +44,11 @@ function Comment({ comment ,postId }) {
     try {
       const result = await axios.post('/api/posts/likeComent', {
         postId,
-        commentId
+        commentId,
       });
       dispatch({ type: 'LIKE_SENT', payload: result });
       if (result) {
-        console.log("Successful")
+        console.log('Successful');
       } else {
         toast.error('!Something went wrong');
         dispatch({ type: 'LIKE_FAIL' });
@@ -51,7 +57,28 @@ function Comment({ comment ,postId }) {
       console.log(err);
     }
 
-    console.log(commentId)
+    console.log(commentId);
+  };
+
+  const commentDislike = async (commentId) => {
+    dispatch({ type: 'LIKE_LOADING' });
+    try {
+      const result = await axios.post('/api/posts/unlikeComment', {
+        postId,
+        commentId,
+      });
+      dispatch({ type: 'UNLIKE_SENT', payload: result });
+      if (result) {
+        console.log('Successful');
+      } else {
+        toast.error('!Something went wrong');
+        dispatch({ type: 'LIKE_FAIL' });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    console.log(commentId);
   };
 
   return (
@@ -73,7 +100,7 @@ function Comment({ comment ,postId }) {
           <button className="text-[12px] text-gray-500">Reply</button>
         </div>
       </div>
-      <div >
+      <div>
         {loading ? (
           <div role="status">
             <svg
@@ -95,9 +122,11 @@ function Comment({ comment ,postId }) {
             <span class="sr-only">Loading...</span>
           </div>
         ) : like || alreaylikedComment ? (
-          <FcLike />
+          <FcLike onClick={() => commentDislike(comment._id)} />
+        ) : unlike ? (
+          <BsHeart onClick={() => commentLike(comment._id)} />
         ) : (
-          <BsHeart onClick={()=>commentLike(comment._id)} />
+          <BsHeart onClick={() => commentLike(comment._id)} />
         )}
       </div>
     </div>
