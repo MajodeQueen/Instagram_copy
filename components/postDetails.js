@@ -1,7 +1,7 @@
 import { Store } from '@/utils/Store';
 import { Avatar } from '@mui/material';
 import Image from 'next/image';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Comment from './commentComp';
 import { BsChat, BsHeart, BsThreeDots, BsEmojiSmile } from 'react-icons/bs';
 
@@ -9,6 +9,7 @@ export default function PostDetails() {
   const { state: cxtState, dispatch: cxtDispatch } = useContext(Store);
   const { post } = cxtState;
   const postId = post._id;
+  const [addText ,setAddComment] = useState("")
 
   const closePostAbout = () => {
     cxtDispatch({ type: 'CLOSE_POST_DETAILS' });
@@ -93,7 +94,7 @@ export default function PostDetails() {
                               key={comment._id}
                               className="flex items-center space-x-4 justify-between"
                             >
-                              <Comment comment={comment} postId={postId} />
+                              <Comment comment={comment} postId={postId} addText={addText} setAddComment={setAddComment} />
                             </div>
                           ))}
                         </div>
@@ -123,7 +124,7 @@ export default function PostDetails() {
 
                         <div className="flex items-center space-x-2 border-t py-2 px-2">
                           <BsEmojiSmile className="text-2xl " />
-                          <input className="w-[80%] focus:outline-none " />
+                          <input value={addText} onChange={(e)=>setAddComment(e.target.value)} className="w-[80%] focus:outline-none " />
                           <button className="text-blue-400 ">Post</button>
                         </div>
                       </footer>

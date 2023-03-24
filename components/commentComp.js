@@ -23,12 +23,12 @@ const reducer = (state, action) => {
   }
 };
 
-function Comment({ comment, postId }) {
+function Comment({ comment, postId, setAddComment, addText }) {
   const { data: session } = useSession();
   const [{ loading, like, error, unlike }, dispatch] = useReducer(reducer, {
     loading: false,
     error: false,
-    like:false,
+    like: false,
   });
 
   const alreaylikedComment = comment.likes.find(
@@ -81,23 +81,27 @@ function Comment({ comment, postId }) {
     console.log(commentId);
   };
 
+  const replyComment = (comtUser )=>{
+    setAddComment(comtUser);
+  }
+
   return (
     <div className="flex w-full items-center space-x-2 ">
       <Avatar alt="" src={comment.commentBy.image} />
       <div className="w-[90%]">
         <div className="flex space-x-2 mt-2">
           <p className="text-[14px] w-[90%]">
-            <span className="font-semibold">{comment.commentBy.username}</span>
-            {" "}{comment.text}
+            <span className="font-semibold">{comment.commentBy.username}</span>{' '}
+            {comment.text}
           </p>
         </div>
         <div className="flex items-center space-x-2">
           <p className="text-[12px] text-gray-500">{formatter(comment.date)}</p>
           <p className="text-[12px] text-gray-500">
-            {comment.likes?.length}{" "}
+            {comment.likes?.length}{' '}
             {comment.likes.length < 2 ? <span>like</span> : <span>likes</span>}
           </p>
-          <button className="text-[12px] text-gray-500">Reply</button>
+          <button onClick={()=>replyComment(comment.commentBy.username)} className="text-[12px] text-gray-500">Reply</button>
         </div>
       </div>
       <div>
