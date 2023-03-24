@@ -4,16 +4,65 @@ import Image from 'next/image';
 import React, { useContext, useState } from 'react';
 import Comment from './commentComp';
 import { BsChat, BsHeart, BsThreeDots, BsEmojiSmile } from 'react-icons/bs';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import Picker from '@emoji-mart/react';
+import data from '@emoji-mart/data';
 
 export default function PostDetails() {
   const { state: cxtState, dispatch: cxtDispatch } = useContext(Store);
   const { post } = cxtState;
   const postId = post._id;
-  const [addText ,setAddComment] = useState("")
+  const [addText, setAddComment] = useState('');
+  const [isReply, setReply] = useState('');
+  const [openEmoji, setEmoji] = useState(false);
 
   const closePostAbout = () => {
     cxtDispatch({ type: 'CLOSE_POST_DETAILS' });
     console.log('clicked close');
+  };
+
+  const addEmoji = (e) => {
+    let emoji = e.native;
+    setAddComment(addText + emoji);
+  };
+
+  const addComment = async () => {
+    if (isReply.length > 0) {
+      try {
+        const result = await axios.post('/api/posts/replyComment', {
+          postId,
+          isReply,
+          addText,
+        });
+
+        if (result) {
+          setAddComment('');
+          toast.success('Reply successful');
+        } else {
+          toast.error('Reply unsuccessful');
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    } else if (isReply.length === 0) {
+      try {
+        const comment = addText;
+        const data = await axios.post('/api/posts/addComments', {
+          postId,
+          comment,
+        });
+        if (data) {
+          setAddComment('');
+          toast.success('Comment successful');
+        } else {
+          toast.error('Comment unsuccessful');
+          console.log('Nothing happpened');
+        }
+      } catch (err) {
+        console.log(err.response.data);
+      }
+    }
   };
 
   return (
@@ -78,14 +127,17 @@ export default function PostDetails() {
                         </div>
                       </header>
                       <main className="invisible-scrollbar h-56 overflow-auto px-2">
-                        <div className='flex'>
-                          <div className='flex space-x-2'>
+                        <div className="flex">
+                          <div className="flex space-x-2">
                             <Avatar alt="" src={post?.postedImg} />
                             <p className="font-semibold  text-[14px]">
-                              {post.postedUsername}<span className='font-normal text-[14px]'>{" "}{post?.desc}</span>
+                              {post.postedUsername}
+                              <span className="font-normal text-[14px]">
+                                {' '}
+                                {post?.desc}
+                              </span>
                             </p>
                           </div>
-                          
                         </div>
 
                         <div className="w-full">
@@ -94,10 +146,22 @@ export default function PostDetails() {
                               key={comment._id}
                               className="flex items-center space-x-4 justify-between"
                             >
-                              <Comment comment={comment} postId={postId} addText={addText} setAddComment={setAddComment} />
+                              <Comment
+                                comment={comment}
+                                postId={postId}
+                                addText={addText}
+                                setAddComment={setAddComment}
+                                isReply={isReply}
+                                setReply={setReply}
+                              />
                             </div>
                           ))}
                         </div>
+                        {openEmoji && (
+                          <div className=" absolute bottom-36 h-52 overflow-hidden ">
+                            <Picker data={data} onEmojiSelect={addEmoji} />
+                          </div>
+                        )}
                       </main>
                       <footer className="flex flex-col justify-between  border-t h-36 shadow-inner sticky z-10 pb-2">
                         <div className="flex items-center justify-between mt-4 px-2">
@@ -123,9 +187,21 @@ export default function PostDetails() {
                         <div className="px-2">{post.likes.length} likes</div>
 
                         <div className="flex items-center space-x-2 border-t py-2 px-2">
-                          <BsEmojiSmile className="text-2xl " />
-                          <input value={addText} onChange={(e)=>setAddComment(e.target.value)} className="w-[80%] focus:outline-none " />
-                          <button className="text-blue-400 ">Post</button>
+                          <BsEmojiSmile
+                            className="text-2xl "
+                            onClick={() => setEmoji(!openEmoji)}
+                          />
+                          <input
+                            value={addText}
+                            onChange={(e) => setAddComment(e.target.value)}
+                            className="w-[80%] text-[14px] text-gray-600 focus:outline-none "
+                          />
+                          <button
+                            onClick={() => addComment()}
+                            className="text-blue-400 active:text-red-500"
+                          >
+                            Post
+                          </button>
                         </div>
                       </footer>
                     </div>

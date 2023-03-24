@@ -23,7 +23,7 @@ const reducer = (state, action) => {
   }
 };
 
-function Comment({ comment, postId, setAddComment, addText }) {
+function Comment({ comment, postId, setAddComment, setReply }) {
   const { data: session } = useSession();
   const [{ loading, like, error, unlike }, dispatch] = useReducer(reducer, {
     loading: false,
@@ -81,9 +81,10 @@ function Comment({ comment, postId, setAddComment, addText }) {
     console.log(commentId);
   };
 
-  const replyComment = (comtUser )=>{
+  const replyComment = (comtUser, comtId) => {
     setAddComment(comtUser);
-  }
+    setReply(comtId);
+  };
 
   return (
     <div className="flex w-full items-center space-x-2 ">
@@ -101,7 +102,14 @@ function Comment({ comment, postId, setAddComment, addText }) {
             {comment.likes?.length}{' '}
             {comment.likes.length < 2 ? <span>like</span> : <span>likes</span>}
           </p>
-          <button onClick={()=>replyComment(comment.commentBy.username)} className="text-[12px] text-gray-500">Reply</button>
+          <button
+            onClick={() =>
+              replyComment(comment.commentBy.username, comment._id)
+            }
+            className="text-[12px] text-gray-500"
+          >
+            Reply
+          </button>
         </div>
       </div>
       <div>
