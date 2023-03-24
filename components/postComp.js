@@ -115,7 +115,7 @@ export default function PostComp({ post, fetchData }) {
               )}
             </div>
             <div>
-              <BsChat className="text-2xl " />
+              <BsChat className="text-2xl " onClick={openAboutPost} />
             </div>
             <img
               src="/images/pngkit_send-icon-png_1882778.png"
