@@ -126,7 +126,7 @@ export default function PostComp({ post, fetchData }) {
           <img src="/images/kindpng_1791489.png" alt="" className="w-6 h-6" />
         </div>
         <div className="mt-2">{post.likes.length} likes</div>
-        <div className="flex items-center space-x-2">
+        <div className="">
           <p className="font-semibold">{post?.postedUsername}</p>
           <p>{post?.desc}</p>
         </div>
