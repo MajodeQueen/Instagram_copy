@@ -181,7 +181,7 @@ function Comment({ comment, postId, setAddComment, setReply }) {
       {show ? (
         <div>
           {comment.replies.map((reply) => (
-            <CommentReply reply={reply} comment={comment} />
+            <CommentReply reply={reply} comment={comment} postId={postId} />
           ))}
         </div>
       ) : (

@@ -94,7 +94,7 @@ export default function Layout({ children, title }) {
 
 
       <div
-        className={`flex flex-col justify-between md:grid md:grid-cols-5 md:gap-16 min-h-screen md:flex-row bg-white relative `}
+        className={`flex flex-col justify-between md:grid md:grid-cols-5 md:gap-16   min-h-screen md:flex-row bg-white relative `}
       >
         <div
           className={` ${
@@ -150,7 +150,7 @@ export default function Layout({ children, title }) {
           {create && 
           (
             <div>
-              <CreateWrapper create={create} setCreate={setCreate} />
+              <CreateWrapper create={create} setCreate={setCreate}  userInfo={ userInfo} />
             </div>
           )}
         </div>
@@ -168,7 +168,7 @@ export default function Layout({ children, title }) {
         <div className="md:col-span-4">
           <main>
             <div className={`grid grid-cols-5 min-h-screen`}>
-              <div className={`${openPostDetails?'fixed overflow-hidden':''}col-span-5 md:col-span-3 mt-8 px-6`}>
+              <div className={`${openPostDetails?' overflow-hidden ':''}col-span-5 md:col-span-3 mt-8 `}>
                 {children}
               </div>
               <div className="col-span-2 hidden md:block mt-8 ">

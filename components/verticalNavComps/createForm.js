@@ -10,6 +10,7 @@ import {
 import { Switch } from '@headlessui/react';
 import Link from 'next/link';
 import Head from 'next/head';
+import { Avatar } from '@mui/material';
 
 function Icon({ id, open }) {
   return (
@@ -41,6 +42,7 @@ export default function PostForm({
   setEnabled,
   offcomts,
   setEnabled2,
+  userInfo,
 }) {
   const [open, setOpen] = useState(0);
 
@@ -59,19 +61,13 @@ export default function PostForm({
   };
   return (
     <>
-      <div className=" bg-white  overflow-y-auto flex flex-col justify-start">
+      <div className=" bg-white invisible-scrollbar  overflow-y-auto flex flex-col justify-between h-full">
         <div className="flex items-center space-x-4 px-4">
-          <img
-            src={userData?.img}
-            alt=""
-            width={30}
-            height={30}
-            className="rounded-full "
-          />
-          <p className="font-semibold">{userData?.name}</p>
+          <Avatar alt="" src={userInfo?.image} />
+          <p className="font-semibold">{userInfo?.username}</p>
         </div>
         <form>
-          <div className="w-full mb-4 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 mt-4 scrollbar-hide">
+          <div className="w-full h-80 mb-4 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 mt-4 scrollbar-hide">
             <div className="py-2 bg-white rounded-t-lg dark:bg-gray-800 ">
               <label for="comment" className="sr-only">
                 Your caption{' '}
@@ -99,7 +95,7 @@ export default function PostForm({
               <div className="mt-2 border-t border-b">
                 <input
                   placeholder="Add location"
-                  value = {location}
+                  value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   className="focus:outline-none py-2 px-4"
                 />
@@ -120,7 +116,7 @@ export default function PostForm({
                     </p>
                     <div className="w-full justify-center items-center mt-2 px-2">
                       <input
-                      value={details}
+                        value={details}
                         onChange={(e) => setAccess(e.target.value)}
                         placeholder="Write alt text"
                         className="text-[12px] border px-3 py-2  rounded-md w-[90%]"
@@ -151,7 +147,7 @@ export default function PostForm({
                         </span>
                         <span
                           className={`${
-                            hide? 'translate-x-6' : 'translate-x-1'
+                            hide ? 'translate-x-6' : 'translate-x-1'
                           } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                         />
                       </Switch>

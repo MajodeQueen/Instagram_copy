@@ -18,7 +18,14 @@ const TabComponent = ({
   setCreate,
   userInfo,
 }) => {
-  const router = useRouter();
+
+  const router = useRouter()
+
+  const noScroll = ()=>{
+    setCreate(true)
+    
+  }
+ 
 
   return (
     <div className="flex flex-col bg-[#FFFFFF]  w-full  items-center cursor-pointer">
@@ -141,7 +148,7 @@ const TabComponent = ({
 
         <div
           className={`flex items-center  space-x-6 text-center py-3 px-4 mb-2  w-full rounded-full  text-xs hover:bg-blue-gray-50 active:font-semibold`}
-          onClick={() => setCreate(true)}
+          onClick={() => noScroll()}
         >
           <span className="text-2xl ">
             <CgAddR />

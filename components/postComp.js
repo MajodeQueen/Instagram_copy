@@ -82,10 +82,10 @@ export default function PostComp({ post, fetchData }) {
   };
 
   return (
-    <div className="relative">
-      <div key={post._id} className="w-[450px] mb-10">
+    <div className="relative border-b border-gray-400  md:border-none  ">
+      <div key={post._id} className="md:w-[450px] w-full mb-10">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3 mb-2">
+          <div className="flex items-center space-x-3 md:mb-2 md:mt-0 mt-2 ">
             <Avatar alt="" src={post?.postedImg} />
             <p>{post?.postedUsername}</p>
           </div>
@@ -133,7 +133,7 @@ export default function PostComp({ post, fetchData }) {
         <div className="cursor-pointer" onClick={openAboutPost}>
           <p className="mt-2 text-gray-400">View all {post.comments?.length} comments</p>
         </div>
-        <div className="flex items-center border-b border-black ">
+        <div className="hidden md:flex items-center border-b border-black ">
           <input
             value={comment}
             onChange={(e) => setComment(e.target.value)}

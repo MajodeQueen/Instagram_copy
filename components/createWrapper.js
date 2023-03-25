@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import PostForm from './verticalNavComps/createForm';
 import Image from 'next/image';
 
-export default function CreateWrapper({ create, setCreate }) {
+export default function CreateWrapper({ create, setCreate , userInfo }) {
   const [isPickerVisible, setPickerVisible] = useState(false);
   const [next, setNext] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
@@ -89,21 +89,37 @@ export default function CreateWrapper({ create, setCreate }) {
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute flex w-full h-full">
-            <div className={`absolute top-3 flex right-4`}>
+            <div className="absolute top-0 right-4">
               <button
-                className="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                onClick={() => setCreate(false)}
+                type="button"
+                className="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white cursor-pointer"
               >
-                <AiOutlineClose onClick={()=>setCreate(false)}/>
+                <span className="sr-only">Close panel</span>
+                <svg
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
               </button>
             </div>
 
-            <div className="absolute flex justify-center items-center right-0 left-0 w-screen h-screen mb-8">
-              <div className="bg-white mx-20">
+            <div className="absolute flex justify-center items-center right-0 left-0 w-full h-full mt-4">
+              <div className="bg-white mx-48 ">
                 {imagePreview || videoPreview ? (
-                  <div className="">
-                    <div className="flex items-center justify-between px-2 w-full border-b py-2 sticky  z-10 top-0 bg-white">
+                  <div className=" flex flex-col ">
+                    <div className="flex items-center justify-between px-2 w-full  border-b py-2 sticky  z-10 top-0 bg-white rounded-xl">
                       {next ? (
-                        <div className="flex items-center justify-between px-2 w-full">
+                        <div className="flex items-center justify-between px-2 w-full rounded-xl">
                           <BiArrowBack onClick={() => setNext(!next)} />
                           <p>Create new post</p>
                           <div
@@ -115,7 +131,7 @@ export default function CreateWrapper({ create, setCreate }) {
                         </div>
                       ) : (
                         <div className="flex items-center justify-between px-2 w-full">
-                          <BiArrowBack  />
+                          <BiArrowBack />
                           <p>Crop</p>
                           <div
                             onClick={() => setNext(!next)}
@@ -135,15 +151,19 @@ export default function CreateWrapper({ create, setCreate }) {
                         <div className="sticky top-10">
                           {imagePreview != null && (
                             <Image
-                            src={imagePreview}
-                            width={200}
-                            height={300}
-                            alt=""
-                            sizes="(max-width: 768px) 100vw,
+                              src={imagePreview}
+                              width={200}
+                              height={300}
+                              alt=""
+                              sizes="(max-width: 768px) 100vw,
                                 (max-width: 1200px) 50vw,
                                      33vw"
-                            className={` ${next?'w-[600px] h-[450px]':'w-[350px] h-[450px]'} object-cover`}
-                          />
+                              className={` ${
+                                next
+                                  ? 'w-[600px] h-[450px] '
+                                  : 'w-[350px] h-[450px]'
+                              } object-cover`}
+                            />
                           )}
                           {videoPreview != null && (
                             <ReactPlayer
@@ -160,8 +180,9 @@ export default function CreateWrapper({ create, setCreate }) {
                       </div>
 
                       {next && (
-                        <div className="col-span-2   pt-4 ">
+                        <div className="col-span-2 mt-8 overflow-auto">
                           <PostForm
+
                             isPickerVisible={isPickerVisible}
                             setPickerVisible={setPickerVisible}
                             desc={desc}
@@ -174,6 +195,7 @@ export default function CreateWrapper({ create, setCreate }) {
                             setEnabled={setEnabled}
                             offcomts={offcomts}
                             setEnabled2={setEnabled2}
+                            userInfo={userInfo}
                           />
                         </div>
                       )}
