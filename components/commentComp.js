@@ -91,7 +91,7 @@ function Comment({ comment, postId, setAddComment, setReply }) {
 
   return (
     <div className="w-full">
-      <div className="flex w-full items-center space-x-2 ">
+      <div className="flex w-full space-x-2 ">
         <Avatar alt="" src={comment.commentBy.image} />
         <div className="w-[90%]">
           <div className="flex space-x-2 mt-2">
@@ -123,6 +123,29 @@ function Comment({ comment, postId, setAddComment, setReply }) {
               Reply
             </button>
           </div>
+          {comment.replies.length > 0 ? (
+            <div className=" flex cursor-pointer mt-1 ">
+              {show ? (
+                <div
+                  onClick={() => setShow(false)}
+                  className="flex text-[12px]  items-center"
+                >
+                  <hr class="w-8 h-px mx-2  bg-black border-0 dark:bg-gray-700"></hr>
+                  Hide replies
+                </div>
+              ) : (
+                <div
+                  onClick={() => setShow(true)}
+                  className=" flex text-[12px] text-gray-600   items-center"
+                >
+                  <hr class="w-8 h-px mx-2  bg-black border-0 dark:bg-gray-700"></hr>
+                  View replies({comment.replies.length})
+                </div>
+              )}
+            </div>
+          ) : (
+            ''
+          )}
         </div>
         <div>
           {loading ? (
@@ -154,19 +177,7 @@ function Comment({ comment, postId, setAddComment, setReply }) {
           )}
         </div>
       </div>
-      {comment.replies.length > 0 ? (
-        <div className=' flex ml-12 cursor-pointer '>
-          {show ? (
-            <p onClick={() => setShow(false)} className="text-[12px]">Hide replies</p>
-          ) : (
-            <p onClick={() => setShow(true)} className="text-[12px] text-gray-600">
-              View replies({comment.replies.length})
-            </p>
-          )}
-        </div>
-      ) : (
-        ''
-      )}
+
       {show ? (
         <div>
           {comment.replies.map((reply) => (
