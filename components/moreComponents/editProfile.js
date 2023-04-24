@@ -1,7 +1,8 @@
+import { Store } from '@/utils/Store';
 import { Avatar } from '@mui/material';
 import axios from 'axios';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 export default function EditProfile({ userData }) {
@@ -15,12 +16,26 @@ export default function EditProfile({ userData }) {
   const [gender, setGender] = useState();
   const [sug, setSuggestions] = useState(false);
 
+  const {state} = useContext(Store);
+  const {user} = state
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     const image = await profilepicUpload();
     // console.log(image)
     try {
-      const result = await axios.put('/api/users/updateUser', {
+      let url;
+        if (process.env.NODE_ENV === 'production') {
+          url = 'http://localhost:5000/api/updateUser';
+        } else {
+          url = 'http://localhost:5000/api/updateUser';
+        }
+
+        const config = {
+          headers: { authorization: `Bearer ${user.token}` }
+        };
+
+      const result = await axios.put(url, {
         image,
         name,
         username,
@@ -30,7 +45,7 @@ export default function EditProfile({ userData }) {
         number,
         gender,
         sug,
-      });
+      },config);
 
       if (result) {
         toast.success('Update successful');

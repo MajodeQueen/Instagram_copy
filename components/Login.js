@@ -1,26 +1,28 @@
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { Store } from '@/utils/Store';
+import Cookies from 'js-cookie';
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const { data: session } = useSession();
+  const { dispatch } = useContext(Store);
 
   const router = useRouter();
-  const { redirect } = router.query;
+  // const { redirect } = router.query;
 
-  useEffect(() => {
-    if (session?.user) {
-      router.push(redirect || '/');
-    }
-  }, [router, session, redirect]);
+  // useEffect(() => {
+  //   if (session?.user) {
+  //     router.push(redirect || '/');
+  //   }
+  // }, [router, session, redirect]);
 
-  async function handleGoogleSign() {
-    signIn('google', { callbackUrl: 'http://localhost:3000' });
-  }
+  // async function handleGoogleSign() {
+  //   signIn('google', { callbackUrl: 'http://localhost:3000' });
+  // }
   const {
     handleSubmit,
     register,
@@ -28,13 +30,25 @@ export default function Login() {
   } = useForm();
   const submitHandler = async ({ email, password }) => {
     try {
-      const result = await signIn('credentials', {
-        redirect: false,
-        email,
-        password,
-      });
-      if (result.error) {
-        console.log(result.error);
+      const config = {
+        headers: {
+          'Content-type': 'application/json',
+        },
+      };
+      const { data } = await axios.post(
+        'http://localhost:5000/api/users/login',
+        {
+          email,
+          password,
+        },
+        config
+      );
+      dispatch({ type: 'LOGIN_USER', payload: data });
+      Cookies.set('user', JSON.stringify({data}));
+
+      if (data) {
+        toast.success('Successfully logged In');
+        router.push('/');
       }
     } catch (err) {
       console.log(err);
@@ -148,7 +162,7 @@ export default function Login() {
                 </div>
                 <button
                   type="submit"
-                  onClick={handleGoogleSign}
+                  // onClick={handleGoogleSign}
                   className="w-full md:mx- flex justify-center items-center mt-4 space-x-2 shadow py-4"
                 >
                   <FcGoogle />
@@ -168,9 +182,7 @@ export default function Login() {
             <div className="flex  justify-center md:border   md:border-gray-200  items-center bg-white md:mt-2 px-6 py-6">
               <p className="text-xs">Don't have an account?</p>
               <Link href="/register">
-                <p className="text-xs text-blue-500 font-semibold">
-                  Sign Up
-                </p>
+                <p className="text-xs text-blue-500 font-semibold">Sign Up</p>
               </Link>
             </div>
 

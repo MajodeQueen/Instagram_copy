@@ -1,14 +1,16 @@
+import { Store } from '@/utils/Store';
 import axios from 'axios';
-import { signIn } from 'next-auth/react';
+import Cookies from 'js-cookie';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useContext } from 'react';
+import React, { useContext} from 'react';
 import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
 import { toast } from 'react-toastify';
 
 export default function register() {
+  const { dispatch } = useContext(Store);
   const router = useRouter();
   const {
     register,
@@ -17,33 +19,45 @@ export default function register() {
   } = useForm();
   const submitHandler = async ({ username, email, password, name }) => {
     try {
-      await axios.post('/api/auth/signup', {
-        username,
-        name,
-        email,
-        password,
-      });
-
-      const result = await signIn('credentials', {
-        redirect: false,
-        email,
-        password,
-      });
-      router.push('/');
-      if (result.error) {
-        console.log(result.error);
+      let url;
+      if (process.env.NODE_ENV === 'production') {
+        url = 'http://localhost:5000/api/register';
+      } else {
+        url = 'http://localhost:5000/api/register';
       }
-      toast.success('SignUp successful')
+
+      const config = {
+        headers: {
+          'Content-type': 'application/json',
+        },
+      };
+
+      const { data } = await axios.post(
+        url,
+        {
+          username,
+          name,
+          email,
+          password,
+        },
+        config
+      );
+
+      dispatch({ type: 'REGISTER', payload: data });
+      Cookies.set('user', JSON.stringify(data));
+
+      toast.success('Successfully signed In');
+      router.push('/');
     } catch (err) {
       console.log(err);
-      toast.error('!Something went wrong')
+      toast.error('!Something went wrong');
     }
   };
 
   return (
     <>
       <Head>
-      <title>Signup</title>
+        <title>Signup</title>
         <meta
           name="description"
           content="Instagram clone using next js ,mongodb and tailwind"

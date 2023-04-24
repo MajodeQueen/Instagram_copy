@@ -1,52 +1,63 @@
 import SettingsLayout from '@/components/moreComponents/settingsLayout';
+import { Store } from '@/utils/Store';
 import axios from 'axios';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import React, { useEffect, useReducer } from 'react';
+import React, { useContext, useEffect, useReducer } from 'react';
 import { TbSettings } from 'react-icons/tb';
 import ProfileTabz from './profiletabzComp';
 
 const reducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_USER':
-      return { ...state, user: action.payload };
+      return { ...state, userInfo: action.payload };
     default:
       return state;
   }
 };
 
 export default function ProfileComp({ children, tab, Tab, ptabz }) {
-  const [{ user }, dispatch] = useReducer(reducer, { user: null });
-  const { data: session } = useSession();
-  const userId = session?.user._id;
+  const [{ userInfo }, dispatch] = useReducer(reducer, { user: null });
+ const {state:cxtState} = useContext(Store)
+ const {user} = cxtState
+  
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchUser = async () => {
       try {
-        const { data } = await axios.get(`/api/userInfo/${userId}`);
-        dispatch({ type: 'FETCH_USER', payload: data });
+        let url;
+        if (process.env.NODE_ENV === 'production') {
+          url = 'http://localhost:5000/api/userdata';
+        } else {
+          url = 'http://localhost:5000/api/userdata';
+        }
+        const config = {
+          headers: { authorization: `Bearer ${user.token}` }
+        };
+        const { data } = await axios.get(url, config);
+        dispatch({type: 'FETCH_USER',payload:data})
+        
       } catch (err) {
         console.log(err);
       }
     };
-    fetch();
+    fetchUser() ;
   });
   return (
     <SettingsLayout>
-      {user ? (
+      {userInfo ? (
         <div className="mt-6 mx-20">
           <div className="flex space-x-20">
             <label className="">
               <input type="file" />
               <img
-                src={user?.image}
+                src={userInfo?.image}
                 alt=""
                 className="w-40 h-40 rounded-full"
               />
             </label>
             <div className="flex flex-col">
               <div className="flex items-center space-x-6">
-                <p className="text-[20px]">{user?.username}</p>
+                <p className="text-[20px]">{userInfo?.username}</p>
                 <Link href="/settings">
                   <button className="py-1 px-4 bg-gray-100 rounded-md hover:bg-gray-400">
                     Edit profile
@@ -59,7 +70,7 @@ export default function ProfileComp({ children, tab, Tab, ptabz }) {
                 <p>46 followers</p>
                 <p>241 following</p>
               </div>
-              <p className="mt-4">{user?.name}</p>
+              <p className="mt-4">{userInfo?.name}</p>
             </div>
           </div>
           <div className="mt-8">

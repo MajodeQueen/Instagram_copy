@@ -10,7 +10,9 @@ import ManageConts from '@/components/moreComponents/ManageConts';
 import Privacy from '@/components/moreComponents/Privacy ';
 import PushNot from '@/components/moreComponents/PushNot';
 import SettingsComp from '@/components/moreComponents/settingsComp';
+import { Store } from '@/utils/Store';
 import axios from 'axios';
+import { useContext } from 'react';
 import { useEffect, useReducer, useState } from 'react';
 
 const tabz = [
@@ -98,6 +100,9 @@ export default function SettingsPage() {
     help: false,
   };
 
+  const {state} = useContext(Store)
+  const {user} = state
+
   const [tab, tabState] = useState({
     ...defaultState,
     edit_profile: true,
@@ -107,18 +112,27 @@ export default function SettingsPage() {
     error: false,
   });
 
-  const getUser = async () => {
+  const  getUser = async () => {
     try {
-      const { data } = await axios.get('/api/userdata');
-      dispatch({ type: 'FETCH_USERINFO', payload: data });
+      let url;
+      if (process.env.NODE_ENV === 'production') {
+        url = 'http://localhost:5000/api/userdata';
+      } else {
+        url = 'http://localhost:5000/api/userdata';
+      }
+      const config = {
+        headers: { authorization: `Bearer ${user.token}` }
+      };
+      const { data } = await axios.get(url, config);
+      dispatch({type:'FETCH_USERINFO',payload:data})
+      
     } catch (err) {
       console.log(err);
-      dispatch({ type: 'FETCH_FAIL', payload: err });
+      dispatch({type:'FETCH_FAIL',payload:err})
     }
   };
 
   const [reinitializePage, setReinitializePage] = useState(true);
-
   useEffect(() => {
     if (reinitializePage === true) {
       getUser();

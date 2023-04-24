@@ -1,15 +1,12 @@
 import { Avatar } from '@mui/material';
-import axios from 'axios';
-import { getSession, useSession } from 'next-auth/react';
-import Image from 'next/image';
 import Link from 'next/link';
-import React, { useEffect, useReducer } from 'react';
+import React from 'react';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-export default function FollowComp({userInfo, error, followusers}) {
+export default function FollowComp({userInfo,followusers}) {
  
   return (
     <div className="">

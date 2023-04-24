@@ -1,9 +1,19 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
+module.exports = {
   images: {
-    domains: ['res.cloudinary.com']
+    domains: ["res.cloudinary.com"],
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:5000/:path*'
+      }
+    ]
   }
+
 }
 
-module.exports = nextConfig
+
+
+

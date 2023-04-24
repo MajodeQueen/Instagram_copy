@@ -1,7 +1,7 @@
 import { Store } from '@/utils/Store';
 import { Avatar } from '@mui/material';
 import Image from 'next/image';
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import Comment from './commentComp';
 import { BsChat, BsHeart, BsThreeDots, BsEmojiSmile } from 'react-icons/bs';
 import axios from 'axios';
@@ -16,6 +16,7 @@ export default function PostDetails() {
   const [addText, setAddComment] = useState('');
   const [isReply, setReply] = useState('');
   const [openEmoji, setEmoji] = useState(false);
+  const {user} = cxtState
 
   const closePostAbout = () => {
     cxtDispatch({ type: 'CLOSE_POST_DETAILS' });
@@ -30,11 +31,20 @@ export default function PostDetails() {
   const addComment = async () => {
     if (isReply.length > 0) {
       try {
-        const result = await axios.post('/api/posts/replyComment', {
+        let url;
+      if (process.env.NODE_ENV === 'production') {
+        url = 'http://localhost:5000/api/posts/replyComment';
+      } else {
+        url = 'http://localhost:5000/api/posts/replyComment';
+      }
+      const config = {
+        headers: { authorization: `Bearer ${user.token}` },
+      };
+        const result = await axios.post(url, {
           postId,
           isReply,
           addText,
-        });
+        },config);
 
         if (result) {
           setAddComment('');
@@ -47,11 +57,20 @@ export default function PostDetails() {
       }
     } else if (isReply.length === 0) {
       try {
+          let url;
+        if (process.env.NODE_ENV === 'production') {
+          url = 'http://localhost:5000/api/posts/addComments';
+        } else {
+          url = 'http://localhost:5000/api/posts/addComments';
+        }
+        const config = {
+          headers: { authorization: `Bearer ${user.token}` },
+        };
         const comment = addText;
-        const data = await axios.post('/api/posts/addComments', {
+        const data = await axios.post(url, {
           postId,
           comment,
-        });
+        },config);
         if (data) {
           setAddComment('');
           toast.success('Comment successful');

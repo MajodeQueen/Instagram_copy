@@ -16,53 +16,70 @@ import { MdOutlinePhotoCamera } from 'react-icons/md';
 import { GrHomeRounded } from 'react-icons/gr';
 import { CgAddR } from 'react-icons/cg';
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'FETCH_FOLLOW':
-      return { ...state, followusers: action.payload };
-    case 'SAVE_USERINFO':
-      return { ...state, userInfo: action.payload };
-    case 'FETCH_FAIL':
-      return { ...state, error: action.payload };
-    default:
-      return state;
-  }
-};
+// const reducer = (state, action) => {
+//   switch (action.type) {
+//     case 'FETCH_FOLLOW':
+//       return { ...state, followusers: action.payload };
+//     case 'SAVE_USERINFO':
+//       return { ...state, userInfo: action.payload };
+//     case 'FETCH_FAIL':
+//       return { ...state, error: action.payload };
+//     default:
+//       return state;
+//   }
+// };
 
 export default function Layout({ children, title }) {
   const [open, setOpen] = useState(true);
   const [notOpen, setNotOpen] = useState(false);
   const [more, setMore] = useState(false);
   const [create, setCreate] = useState(false);
-  const [postAbout, setPostAbout] = useState(false);
-  const [{ userInfo, error, followusers }, dispatch] = useReducer(reducer, {
-    error: false,
-  });
+  // const [postAbout, setPostAbout] = useState(false);
+  // const [{ userInfo, error, followusers }, dispatch] = useReducer(reducer, {
+  //   error: false,
+  // });
+  const [userInfo, setUserInfo] = useState();
+  const [followusers, setFollowusers] = useState();
 
-  const { state: cxtState } = useContext(Store);
-  const { openPostDetails } = cxtState;
+  const { state } = useContext(Store);
+  const { openPostDetails, user } = state;
 
   const fetchAll = async () => {
     try {
-      const { data } = await axios.get('/api/users/allUsers');
-
-      dispatch({ type: 'FETCH_FOLLOW', payload: data });
-    } catch (err) {
-      dispatch({ type: 'FETCH_FAIL', payload: err });
-    }
+      let url;
+      if (process.env.NODE_ENV === 'production') {
+        url = 'http://localhost:5000/api/users/allUsers';
+      } else {
+        url = 'http://localhost:5000/api/users/allUsers';
+      }
+      const config = {
+        headers: { authorization: `Bearer ${user.token}` }
+      };
+      const { data } = await axios.get(url, config);
+      setFollowusers(data);
+    } catch (err) {}
   };
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axios.get('/api/userdata');
-        dispatch({ type: 'SAVE_USERINFO', payload: data });
+        let url;
+        if (process.env.NODE_ENV === 'production') {
+          url = 'http://localhost:5000/api/userdata';
+        } else {
+          url = 'http://localhost:5000/api/userdata';
+        }
+        const config = {
+          headers: { authorization: `Bearer ${user.token}` }
+        };
+        const { data } = await axios.get(url, config);
+        setUserInfo(data)
       } catch (err) {
         console.log(err);
-        dispatch({ type: 'FETCH_FAIL', payload: err });
       }
     };
     fetchUser();
     fetchAll();
+   
   }, []);
 
   return (
@@ -200,11 +217,7 @@ export default function Layout({ children, title }) {
                 {children}
               </div>
               <div className="col-span-2 hidden md:block mt-8  z-10">
-                <FollowComp
-                  userInfo={userInfo}
-                  error={error}
-                  followusers={followusers}
-                />
+                <FollowComp userInfo={userInfo} followusers={followusers} />
               </div>
             </div>
           </main>
@@ -212,16 +225,16 @@ export default function Layout({ children, title }) {
         <div className="block md:hidden fixed bottom-0 shadow-lg mt-2 w-full">
           <footer>
             <div className="flex items-center h-16 justify-around bg-white">
-              <GrHomeRounded  className='text-2xl'/>
-              <BsSearch className='text-2xl' />
-              <CgAddR  className='text-2xl'/>
+              <GrHomeRounded className="text-2xl" />
+              <BsSearch className="text-2xl" />
+              <CgAddR className="text-2xl" />
               <img
                 src="/images/instagram-reels-13408 (1).png"
                 alt="reel img"
                 width="22"
               />
 
-              <BsPerson  className='text-2xl'/>
+              <BsPerson className="text-2xl" />
             </div>
           </footer>
         </div>

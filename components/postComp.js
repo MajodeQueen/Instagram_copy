@@ -16,14 +16,14 @@ import { Store } from '@/utils/Store';
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
 
-export default function PostComp({ post, fetchData }) {
-  const { data: session } = useSession();
+export default function PostComp({ post, fetchData, userData }) {
+  const { state, dispatch: cxtDispatch } = useContext(Store);
+  const { user } = state;
   const [isLiked, setisLiked] = useState(false);
   const [comment, setComment] = useState('');
   const [openEmoji, setEmoji] = useState(false);
   const postId = post._id;
-  const alreayliked = post.likes.find((x) => x === session.user._id);
-  const { dispatch: cxtDispatch } = useContext(Store);
+  const alreayliked = post.likes.find((x) => x._id === userData._id);
 
   const addEmoji = (e) => {
     let emoji = e.native;
@@ -34,9 +34,23 @@ export default function PostComp({ post, fetchData }) {
     e.preventDefault();
     try {
       setisLiked(true);
-      const result = await axios.put('/api/posts/likes', {
-        postId,
-      });
+      let url;
+      if (process.env.NODE_ENV === 'production') {
+        url = 'http://localhost:5000/api/posts/likes';
+      } else {
+        url = 'http://localhost:5000/api/posts/likes';
+      }
+
+      const config = {
+        headers: { authorization: `Bearer ${user.token}` },
+      };
+      const result = await axios.put(
+        url,
+        {
+          postId,
+        },
+        config
+      );
       if (result) {
         fetchData();
       }
@@ -44,13 +58,31 @@ export default function PostComp({ post, fetchData }) {
       console.log(err);
     }
   };
+
+
+
   const removeLike = async (e) => {
     e.preventDefault();
     try {
       setisLiked(false);
-      const result = await axios.put('/api/posts/unlikes', {
-        postId,
-      });
+      let url;
+      if (process.env.NODE_ENV === 'production') {
+        url = 'http://localhost:5000/api/posts/unlikes';
+      } else {
+        url = 'http://localhost:5000/api/posts/unlikes';
+      }
+
+      const config = {
+        headers: { authorization: `Bearer ${user.token}` },
+      };
+
+      const result = await axios.put(
+        url,
+        {
+          postId,
+        },
+        config
+      );
       if (result) {
         fetchData();
       }
@@ -62,10 +94,21 @@ export default function PostComp({ post, fetchData }) {
   const addComment = async (e) => {
     e.preventDefault();
     try {
-      const data = await axios.post('/api/posts/addComments', {
+
+      let url;
+      if (process.env.NODE_ENV === 'production') {
+        url = 'http://localhost:5000/api/posts/addComments';
+      } else {
+        url = 'http://localhost:5000/api/posts/addComments';
+      }
+
+      const config = {
+        headers: { authorization: `Bearer ${user.token}` },
+      };
+      const data = await axios.post(url, {
         postId,
         comment,
-      });
+      },config);
       if (data) {
         fetchData();
         setComment('');
@@ -131,7 +174,9 @@ export default function PostComp({ post, fetchData }) {
           <p>{post?.desc}</p>
         </div>
         <div className="cursor-pointer" onClick={openAboutPost}>
-          <p className="mt-2 text-gray-400">View all {post.comments?.length} comments</p>
+          <p className="mt-2 text-gray-400">
+            View all {post.comments?.length} comments
+          </p>
         </div>
         <div className="hidden md:flex items-center border-b border-black ">
           <input
@@ -149,7 +194,7 @@ export default function PostComp({ post, fetchData }) {
                 Post
               </button>
             )}
-            <div className='flex items-center space-x-4'>
+            <div className="flex items-center space-x-4">
               <GrEmoji onClick={() => setEmoji(!openEmoji)} />
               {openEmoji && (
                 <div className=" absolute  overflow-hidden ">

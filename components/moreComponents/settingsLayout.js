@@ -92,7 +92,7 @@ export default function SettingsLayout({ children , title ,userData}) {
         <div className="absolute z-50">
           {create && <CreateWrapper create={create} setCreate={setCreate} />}
         </div>
-        <div className="col-span-4">{children}</div>
+        <div className="col-span-4 min-h-screen">{children}</div>
       </div>
     </>
   );

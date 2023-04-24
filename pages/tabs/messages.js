@@ -1,14 +1,21 @@
-import Layout from '@/components/Layout';
 import SettingsLayout from '@/components/moreComponents/settingsLayout';
-import Link from 'next/link';
 import React from 'react';
-import { BsChat, BsHeart } from 'react-icons/bs';
-import { GrEmoji } from 'react-icons/gr';
-import { MdOutlineMoreHoriz } from 'react-icons/md';
+
 export default function Messages() {
   return (
     <SettingsLayout>
-      <div>Messages</div>
+      <div className=" border mt-6 mr-10 h-[90%]">
+        <div className="flex border-b justify-between">
+          <div className="w-[30%] border-r ">
+            <div>
+              <p>chats</p>
+            </div>
+          </div>
+          <div>
+            <p>message box</p>
+          </div>
+        </div>
+      </div>
     </SettingsLayout>
   );
 }

@@ -1,11 +1,12 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { BiArrowBack } from 'react-icons/bi';
 import ReactPlayer from 'react-player';
 import { toast } from 'react-toastify';
 import PostForm from './verticalNavComps/createForm';
 import Image from 'next/image';
+import { Store } from '@/utils/Store';
 
 export default function CreateWrapper({ create, setCreate , userInfo }) {
   const [isPickerVisible, setPickerVisible] = useState(false);
@@ -17,6 +18,8 @@ export default function CreateWrapper({ create, setCreate , userInfo }) {
   const [location, setLocation] = useState('');
   const [hide, setEnabled] = useState(false);
   const [offcomts, setEnabled2] = useState(false);
+  const {state} = useContext(Store);
+  const {user} = state;
 
   function previewFile(e) {
     // Reading New File (open file Picker Box)
@@ -41,14 +44,23 @@ export default function CreateWrapper({ create, setCreate , userInfo }) {
     const imageUrl = await imageUpload();
     console.log(imageUrl);
     try {
-      const { data } = await axios.post('/api/posts/createPost', {
+      let url;
+        if (process.env.NODE_ENV === 'production') {
+          url = 'http://localhost:5000/api/posts/createPost';
+        } else {
+          url = 'http://localhost:5000/api/posts/createPost';
+        }
+        const config = {
+          headers: { authorization: `Bearer ${user.token}` }
+        };
+      const { data } = await axios.post(url, {
         desc,
         details,
         location,
         hide,
         offcomts,
         imageUrl,
-      });
+      },config);
       if (data) {
         toast.success('Post successfully created');
         setCreate(!create);

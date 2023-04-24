@@ -2,8 +2,7 @@ import Layout from '@/components/Layout';
 import PostComp from '@/components/postComp';
 import { Store } from '@/utils/Store';
 import axios from 'axios';
-import { getSession } from 'next-auth/react';
-import React, { useContext, useEffect, useReducer } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -18,24 +17,59 @@ const reducer = (state, action) => {
   }
 };
 
-export default function Home({session}) {
+export default function Home() {
   const [{ loading, error, posts }, dispatch] = useReducer(reducer, {
     loading: true,
     error: false,
   });
 
+  const [userData , setUserData] = useState()
+
+  const { state: cxtState } = useContext(Store);
+  const { user } = cxtState;
+
   const fetchData = async () => {
     dispatch({ type: 'FETCH_REQUEST' });
     try {
-      const data = await axios.get('/api/posts/getPosts');
-      dispatch({ type: 'FETCH_SUCCESS', payload: data.data });
+      let url;
+      if (process.env.NODE_ENV === 'production') {
+        url = 'http://localhost:5000/api/posts/getPosts';
+      } else {
+        url = 'http://localhost:5000/api/posts/getPosts';
+      }
+
+      const config = {
+        headers: { authorization: `Bearer ${user.token}` },
+      };
+      const data = await axios.get(url, config);
+      console.log(data)
+      dispatch({ type: 'FETCH_SUCCESS', payload: data.data});
     } catch (err) {
       dispatch({ type: 'FETCH_FAIL', payload: err });
     }
   };
- 
+
+  const fetchUser = async () => {
+    try {
+      let url;
+      if (process.env.NODE_ENV === 'production') {
+        url = 'http://localhost:5000/api/userdata';
+      } else {
+        url = 'http://localhost:5000/api/userdata';
+      }
+      const config = {
+        headers: { authorization: `Bearer ${user.token}` }
+      };
+      const { data } = await axios.get(url, config);
+      setUserData({data})
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     fetchData();
+    fetchUser();
   }, []);
   return (
     <Layout>
@@ -63,27 +97,11 @@ export default function Home({session}) {
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center">
-          {posts?.map((post,i) => (
-            <PostComp key={i} post={post} fetchData={fetchData}/>
+          {posts?.map((post, i) => (
+            <PostComp key={i} post={post} fetchData={fetchData} userData={userData}/>
           ))}
         </div>
       )}
     </Layout>
   );
-}
-export async function getServerSideProps(context) {
-
-  const session = await getSession(context)
-  if(!session)
-    return{
-      redirect:{
-        destination: '/login',
-        permanent: false,
-      }
-  }
-  return{
-    props:{
-      session
-    }
-  }
 }

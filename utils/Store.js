@@ -1,10 +1,14 @@
+import Cookies from "js-cookie";
 import { createContext, useReducer } from "react";
 
 export const Store = createContext();
-
 const initialState = {
+  user:Cookies.get('user')
+  ? JSON.parse(Cookies.get('user')):
+  null,
   openPostDetails: false,
-  post:{}
+  post:{},
+  
 };
 
 const reducer = (state, action) => {
@@ -13,6 +17,10 @@ const reducer = (state, action) => {
       return { ...state,  openPostDetails: true , post:action.payload };
       case 'CLOSE_POST_DETAILS':
         return { ...state,  openPostDetails: false ,post:{} };
+      case 'LOGIN_USER':
+        return {...state,user:action.payload}
+        case 'REGISTER':
+        return {...state,user:action.payload}
     default:
       return state;
   }
