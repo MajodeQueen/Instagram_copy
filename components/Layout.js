@@ -16,28 +16,13 @@ import { MdOutlinePhotoCamera } from 'react-icons/md';
 import { GrHomeRounded } from 'react-icons/gr';
 import { CgAddR } from 'react-icons/cg';
 
-// const reducer = (state, action) => {
-//   switch (action.type) {
-//     case 'FETCH_FOLLOW':
-//       return { ...state, followusers: action.payload };
-//     case 'SAVE_USERINFO':
-//       return { ...state, userInfo: action.payload };
-//     case 'FETCH_FAIL':
-//       return { ...state, error: action.payload };
-//     default:
-//       return state;
-//   }
-// };
+
 
 export default function Layout({ children, title }) {
   const [open, setOpen] = useState(true);
   const [notOpen, setNotOpen] = useState(false);
   const [more, setMore] = useState(false);
   const [create, setCreate] = useState(false);
-  // const [postAbout, setPostAbout] = useState(false);
-  // const [{ userInfo, error, followusers }, dispatch] = useReducer(reducer, {
-  //   error: false,
-  // });
   const [userInfo, setUserInfo] = useState();
   const [followusers, setFollowusers] = useState();
 

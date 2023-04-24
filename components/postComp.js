@@ -16,14 +16,14 @@ import { Store } from '@/utils/Store';
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
 
-export default function PostComp({ post, fetchData, userData }) {
+export default function PostComp({ post, fetchData}) {
   const { state, dispatch: cxtDispatch } = useContext(Store);
   const { user } = state;
   const [isLiked, setisLiked] = useState(false);
   const [comment, setComment] = useState('');
   const [openEmoji, setEmoji] = useState(false);
   const postId = post._id;
-  const alreayliked = post.likes.find((x) => x._id === userData._id);
+  const alreayliked = post.likes.find((x) => x === user._id);
 
   const addEmoji = (e) => {
     let emoji = e.native;
@@ -52,7 +52,7 @@ export default function PostComp({ post, fetchData, userData }) {
         config
       );
       if (result) {
-        fetchData();
+        // fetchData();
       }
     } catch (err) {
       console.log(err);
@@ -123,7 +123,7 @@ export default function PostComp({ post, fetchData, userData }) {
   const openAboutPost = async () => {
     cxtDispatch({ type: 'OPEN_POST_DETAILS', payload: post });
   };
-
+ 
   return (
     <div className="relative border-b border-gray-400  md:border-none  ">
       <div key={post._id} className="md:w-[450px] w-full mb-10">

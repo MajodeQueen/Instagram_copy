@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { Store } from '@/utils/Store';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,13 +31,20 @@ export default function Login() {
   } = useForm();
   const submitHandler = async ({ email, password }) => {
     try {
+      let url;
+      if (process.env.NODE_ENV === 'production') {
+        url = 'http://localhost:5000/api/login';
+      } else {
+        url = 'http://localhost:5000/api/login';
+      }
+
       const config = {
         headers: {
           'Content-type': 'application/json',
         },
       };
       const { data } = await axios.post(
-        'http://localhost:5000/api/users/login',
+        url,
         {
           email,
           password,
@@ -44,7 +52,7 @@ export default function Login() {
         config
       );
       dispatch({ type: 'LOGIN_USER', payload: data });
-      Cookies.set('user', JSON.stringify({data}));
+      Cookies.set('user', JSON.stringify(data));
 
       if (data) {
         toast.success('Successfully logged In');
@@ -148,7 +156,7 @@ export default function Login() {
                   </label>
                 </div>
                 <div className="flex items-center mt-4 ">
-                  <button className="bg-blue-500 w-full rounded text-white text-xs font-semibold py-[4px] hover:bg-blue-700">
+                  <button type='submit' className="bg-blue-500 w-full rounded text-white text-xs font-semibold py-[4px] hover:bg-blue-700">
                     Log in
                   </button>
                 </div>

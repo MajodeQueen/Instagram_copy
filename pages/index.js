@@ -1,6 +1,7 @@
 import Layout from '@/components/Layout';
 import PostComp from '@/components/postComp';
 import { Store } from '@/utils/Store';
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import React, { useContext, useEffect, useReducer, useState } from 'react';
 
@@ -23,8 +24,7 @@ export default function Home() {
     error: false,
   });
 
-  const [userData , setUserData] = useState()
-
+  const router = useRouter()
   const { state: cxtState } = useContext(Store);
   const { user } = cxtState;
 
@@ -42,34 +42,20 @@ export default function Home() {
         headers: { authorization: `Bearer ${user.token}` },
       };
       const data = await axios.get(url, config);
-      console.log(data)
+      
       dispatch({ type: 'FETCH_SUCCESS', payload: data.data});
     } catch (err) {
       dispatch({ type: 'FETCH_FAIL', payload: err });
     }
   };
 
-  const fetchUser = async () => {
-    try {
-      let url;
-      if (process.env.NODE_ENV === 'production') {
-        url = 'http://localhost:5000/api/userdata';
-      } else {
-        url = 'http://localhost:5000/api/userdata';
-      }
-      const config = {
-        headers: { authorization: `Bearer ${user.token}` }
-      };
-      const { data } = await axios.get(url, config);
-      setUserData({data})
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
-    fetchUser();
+    if(user){
+      fetchData();
+    }else{
+      router.push("/login")
+    }
+   
   }, []);
   return (
     <Layout>
@@ -98,7 +84,7 @@ export default function Home() {
       ) : (
         <div className="flex flex-col items-center justify-center">
           {posts?.map((post, i) => (
-            <PostComp key={i} post={post} fetchData={fetchData} userData={userData}/>
+            <PostComp key={i} post={post} fetchData={fetchData} />
           ))}
         </div>
       )}
